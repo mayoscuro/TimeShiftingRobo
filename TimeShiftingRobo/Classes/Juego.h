@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 #include <map>
 #include "Personaje.h"
+#include "Mina.h"
+#include "Enemigos.cpp"
 
 
 USING_NS_CC;
@@ -21,6 +23,13 @@ public:
 	
 	cocos2d::Sprite *background;
 	Personaje* personaje;
+	Mina* mina;
+	terrestres* enemigo1;
+	terrestres* enemigo2;
+
+	//Prueba debug info
+	cocos2d::Label *label;
+	//Prueba debug info
 
     CREATE_FUNC(Juego);
 
@@ -29,7 +38,10 @@ public:
 private:
      static std::map<cocos2d::EventKeyboard::KeyCode,
         std::chrono::high_resolution_clock::time_point> keys;
-   
+		
+	 bool explosionMina;
+	 int maxMina;
+	 void lanzarMina();
 };
 
 #endif 

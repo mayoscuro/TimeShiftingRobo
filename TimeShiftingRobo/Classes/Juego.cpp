@@ -3,6 +3,7 @@
 
 USING_NS_CC;
 
+int maxMina = 0;
 Scene* Juego::createScene()
 {
     auto scene = Scene::create();
@@ -30,11 +31,17 @@ bool Juego::init()
     
     this->addChild( background );
 	
-
-
 	personaje = new Personaje;
 	personaje->setPosition( Point( visibleSize.width / 5 + origin.x, visibleSize.height / 4 + origin.y) );
 	this->addChild( personaje );
+	//Prueba de visualización de enemigos:
+	enemigo1 = new terrestres(1);
+	enemigo1->setPosition( Point( visibleSize.width / 5 + origin.x +500, visibleSize.height / 4 + origin.y) );
+	this->addChild( enemigo1 );
+	enemigo2 = new terrestres(2);
+	enemigo2->setPosition( Point( visibleSize.width / 5 + origin.x+1000, visibleSize.height / 4 + origin.y) );
+	this->addChild( enemigo2 );
+	//Fin Prueba
 
 	//Teclado Mantener pulsado:
 	auto eventListener = EventListenerKeyboard::create();
@@ -50,11 +57,13 @@ bool Juego::init()
         keys.erase(keyCode);
     };
 
-    this->_eventDispatcher->addEventListenerWithSceneGraphPriority(eventListener,this);
+	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(eventListener,this);
 
     // Hacemos saber a cocos que tenemos una función update
     this->scheduleUpdate();
-    return true;
+	
+	return true;
+
 }
 
 //Funciones de teclado:
@@ -83,6 +92,7 @@ void Juego::update(float delta) {
 		//personaje->setTexture("Personajeizq.png");
 		personaje->setPosition(loc.x - 3,loc.y);
 		background->setPosition(locEscenario.x,locEscenario.y);
+		lanzarMina();//Lo pongo aquí por probar...
     }
 	else if(isKeyPressed(EventKeyboard::KeyCode::KEY_D)){
 		//personaje->setTexture("Personaje.jpg");
@@ -93,3 +103,14 @@ void Juego::update(float delta) {
 // Cocos requiere que createScene sea estatico, Esto es para crear otro miembro statico.
 std::map<cocos2d::EventKeyboard::KeyCode,
         std::chrono::high_resolution_clock::time_point> Juego::keys;
+void::Juego::lanzarMina(){
+	if(maxMina <= 1){
+		Vec2 posmina = personaje->getPosition();
+		Mina* mina = new Mina();
+		this->addChild( mina );
+		maxMina++;
+		mina->setPosition(posmina.x + 100,posmina.y - 90);
+		explosionMina = mina->explotarMina();
+		//if(explosionMina = true)delete mina;//El else es un petardazo brutal por razónes que pueden surgir xD
+	}
+}
