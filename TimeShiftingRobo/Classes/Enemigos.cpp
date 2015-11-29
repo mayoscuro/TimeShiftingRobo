@@ -10,25 +10,31 @@ class Enemigos : public cocos2d::Layer {
 		virtual void perseguir(){};
 		virtual void atacar(){};
 		virtual void movNoMov(){};
+		int tipo;
+		int pasosIzq;
+		int pasosDer;
 
 };  
 
 class terrestres : public Enemigos{
 public:
 	terrestres(int tipo){
+		pasosIzq = 50;
+		pasosDer = 0;
 		cocos2d::Sprite *enemigo;
 		if(tipo== 1){
+			this->tipo = 1;
 			enemigo = Sprite::create("Mina.png");
 		}else{
+			this->tipo = 2;
 			enemigo = Sprite::create("CloseNormal.png");
 		}
 		this->addChild( enemigo );
-	
-	
 	}
 
 	void terrestres::ruta(){
 		
+
 	}
 };
 

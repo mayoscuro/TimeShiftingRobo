@@ -3,7 +3,6 @@
 
 USING_NS_CC;
 
-int maxMina = 0;
 Scene* Juego::createScene()
 {
     auto scene = Scene::create();
@@ -21,6 +20,12 @@ bool Juego::init()
         return false;
     }
 
+	//intento de añadir fisicas(solo colisionadores y poco más xD)
+	auto scene = Scene::createWithPhysics();
+	scene->getPhysicsWorld()->setGravity(Vec2(0,0));
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+
+	//FIN
 
 
 	Size visibleSize = Director::getInstance()->getVisibleSize();
@@ -43,6 +48,17 @@ bool Juego::init()
 	this->addChild( enemigo2 );
 	//Fin Prueba
 
+	//COSA DE CAMARA(PRUEBA):
+	auto s = Director::getInstance()->getWinSize();
+	auto camera = Camera::createPerspective(60, (GLfloat)s.width/s.height, 1, 1000);
+
+	/*// set parameters for camera
+	camera->setPosition3D(Vec3(0, 100, 100));
+	camera->lookAt(Vec3(0, 0, 0), Vec3(0, 0, 0));
+
+	addChild(camera); //add camera to the scene	
+	FIN DE COSAS DE CAMARA(PRUEBA)*/
+
 	//Teclado Mantener pulsado:
 	auto eventListener = EventListenerKeyboard::create();
 	Director::getInstance()->getOpenGLView()->setIMEKeyboardState(true);
@@ -56,19 +72,45 @@ bool Juego::init()
         // remove the key.  std::map.erase() doesn't care if the key doesnt exist
         keys.erase(keyCode);
     };
-
 	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(eventListener,this);
+
+	//Botones de un solo pulsado
+	auto listener = EventListenerKeyboard::create();
+	listener->onKeyPressed = CC_CALLBACK_2(Juego::onKeyPressed ,this);
+	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(listener,this);
+	//
+
+	label = Label::create("timer","\fonts\Arial.ttf",20);
+	label->setPosition( Point( visibleSize.width / 5 + origin.x, visibleSize.height / 4 + origin.y) );
+	label->setColor(Color3B(255,0,0));
+	this->addChild(label);
+
+	//TIMMER FALLIDO:
+	//this->schedule(schedule_selector(Juego::lanzarMina),1.0f);
+
+	//Cosa para lanzar mina:
+	//auto keyboardListener = EventListenerKeyboard::create();
+	//keyboardListener->onKeyPressed = CC_CALLBACK_2(Juego::lanzarMina, this);
 
     // Hacemos saber a cocos que tenemos una función update
     this->scheduleUpdate();
-	
+
+	//Para llamar al timer:
+	this->schedule(schedule_selector(Juego::contador), 10.0f);//Contador que aun no va    [[[[¡¡¡¡¡¡ARREGLAAAAAAAR!!!!!]]]]
+
+
+
 	return true;
 
 }
 
+//Contador que aun no va    [[[[¡¡¡¡¡¡ARREGLAAAAAAAR!!!!!]]]]
+void Juego::contador(float delta){
+	personaje->setTiempoMina(personaje->getTiempoMina() + 1);
+}
+
 //Funciones de teclado:
 bool Juego::isKeyPressed(EventKeyboard::KeyCode code) {
-    //Devuelve true si la tecla esta siendo pulsada:
     if(keys.find(code) != keys.end())
         return true;
     return false;
@@ -88,14 +130,15 @@ void Juego::update(float delta) {
     Node::update(delta);
 	Vec2 loc = personaje->getPosition();
 	Vec2 locEscenario = background->getPosition();
+	Vec2 locEnemigo = enemigo1->getPosition();
+	moverEnemigos(locEnemigo);
 	if(isKeyPressed(EventKeyboard::KeyCode::KEY_A)) {
-		//personaje->setTexture("Personajeizq.png");
+		personaje->personajeAnim(1);//Para que el personaje mire a la izquierda.
 		personaje->setPosition(loc.x - 3,loc.y);
 		background->setPosition(locEscenario.x,locEscenario.y);
-		lanzarMina();//Lo pongo aquí por probar...
     }
 	else if(isKeyPressed(EventKeyboard::KeyCode::KEY_D)){
-		//personaje->setTexture("Personaje.jpg");
+		personaje->personajeAnim(2);
 		personaje->setPosition(loc.x + 3,loc.y);
 		background->setPosition(locEscenario.x ,locEscenario.y);
 	}
@@ -103,14 +146,41 @@ void Juego::update(float delta) {
 // Cocos requiere que createScene sea estatico, Esto es para crear otro miembro statico.
 std::map<cocos2d::EventKeyboard::KeyCode,
         std::chrono::high_resolution_clock::time_point> Juego::keys;
-void::Juego::lanzarMina(){
-	if(maxMina <= 1){
-		Vec2 posmina = personaje->getPosition();
+
+void Juego::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
+{
+	switch(keyCode){
+	case EventKeyboard::KeyCode::KEY_S:
+		lanzarMina();
+		break;
+	}
+}
+
+void Juego::lanzarMina(){	
+	if((personaje->getNumMina()) < 2){
 		Mina* mina = new Mina();
+		Vec2 posmina = personaje->getPosition();
 		this->addChild( mina );
-		maxMina++;
 		mina->setPosition(posmina.x + 100,posmina.y - 90);
-		explosionMina = mina->explotarMina();
-		//if(explosionMina = true)delete mina;//El else es un petardazo brutal por razónes que pueden surgir xD
+		personaje->usarMina();
+		if(personaje->getTiempoMina() >= 5){
+			personaje->retornaMina();
+			explosionMina = mina->explotarMina();
+			removeChild(mina);
+			personaje->setTiempoMina(0);
+		}	
+	}
+}
+
+void Juego::moverEnemigos(Vec2 locEnemigo){
+	if(enemigo1->pasosDer < 50 ){
+		enemigo1->setPosition(locEnemigo.x + 3,locEnemigo.y);
+		enemigo1->pasosDer++;
+	}else if(enemigo1->pasosIzq > 0){
+		enemigo1->setPosition(locEnemigo.x - 3,locEnemigo.y);
+		enemigo1->pasosIzq--;
+	}else{
+		enemigo1->pasosIzq = 50;
+		enemigo1->pasosDer = 0;
 	}
 }
