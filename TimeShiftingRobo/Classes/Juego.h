@@ -45,11 +45,18 @@ public:
 private:
      static std::map<cocos2d::EventKeyboard::KeyCode,
         std::chrono::high_resolution_clock::time_point> keys;
-	
 
 	 bool explosionMina;
 	 void lanzarMina();
 	 void contador(float);
+
+	 void centerViewport(void);
+
+	  //COSAS DE COLISIONES(PRUEBA):
+protected:
+	 cocos2d::CCArray *_colPersonaje;
+     cocos2d::CCArray *_colMina; 
+	 //FIN DE COSAS DE COLISIONES.
 };
 
 #endif 

@@ -2,6 +2,31 @@
 //#include "LectorPersonaje.h"
 
 USING_NS_CC;
+//Cosas para las colisiones:
+/*Juego::~Juego()//Destructor
+{
+  if (_colPersonaje)
+  {
+    _colPersonaje->release();
+    _colPersonaje = NULL;
+  }
+
+  if (_colMina)
+  {
+    _colMina->release();
+    _colMina = NULL;
+  }
+
+  // cpp don't need to call super dealloc
+  // virtual destructor will do this
+}
+
+Juego::Juego()//Constructor
+:_colPersonaje(NULL)
+,_colMina(NULL)
+{
+}   
+//Fin de cosas para las colisiones.*/
 
 Scene* Juego::createScene()
 {
@@ -19,6 +44,13 @@ bool Juego::init()
     {
         return false;
     }
+
+
+	/*//prueba de colisiones:
+	_colPersonaje = new CCArray;
+	_colMina = new CCArray;
+	//Fin de prueba de colisiones.*/
+
 
 	//intento de añadir fisicas(solo colisionadores y poco más xD)
 	auto scene = Scene::createWithPhysics();
@@ -39,6 +71,12 @@ bool Juego::init()
 	personaje = new Personaje;
 	personaje->setPosition( Point( visibleSize.width / 5 + origin.x, visibleSize.height / 4 + origin.y) );
 	this->addChild( personaje );
+	
+	/*//Cosas de colisiones:
+	personaje->setTag(1);
+	_colPersonaje->addObject(personaje);
+	//Fin de cosas de colisiones.*/
+
 	//Prueba de visualización de enemigos:
 	enemigo1 = new terrestres(1);
 	enemigo1->setPosition( Point( visibleSize.width / 5 + origin.x +500, visibleSize.height / 4 + origin.y) );
@@ -48,9 +86,9 @@ bool Juego::init()
 	this->addChild( enemigo2 );
 	//Fin Prueba
 
-	//COSA DE CAMARA(PRUEBA):
+	/*//COSA DE CAMARA(PRUEBA):
 	auto s = Director::getInstance()->getWinSize();
-	auto camera = Camera::createPerspective(60, (GLfloat)s.width/s.height, 1, 1000);
+	auto camera = Camera::createPerspective(60, (GLfloat)s.width/s.height, 1, 1000);*/
 
 	/*// set parameters for camera
 	camera->setPosition3D(Vec3(0, 100, 100));
@@ -125,6 +163,16 @@ double Juego::keyPressedDuration(EventKeyboard::KeyCode code) {
             (std::chrono::high_resolution_clock::now() - keys[code]).count();
 }
 
+//Para el scroll de la pantalla
+void Juego::centerViewport()	{	
+	CCSize	screenSize	=	CCDirector::sharedDirector()->getWinSize();	
+						
+	float	x	=	screenSize.width/2.0	-	personaje->getPosition().x;	
+	float	y	=	screenSize.height/4.0	-	personaje->getPosition().y;	
+						
+	this->setPosition(ccp(x,	y));	
+}
+
 void Juego::update(float delta) {
     // Función que comprueba si las teclas A y D estan siendo pulsadas y mueven al personaje a derecha o izquierda.
     Node::update(delta);
@@ -132,6 +180,7 @@ void Juego::update(float delta) {
 	Vec2 locEscenario = background->getPosition();
 	Vec2 locEnemigo = enemigo1->getPosition();
 	moverEnemigos(locEnemigo);
+	centerViewport();
 	if(isKeyPressed(EventKeyboard::KeyCode::KEY_A)) {
 		personaje->personajeAnim(1);//Para que el personaje mire a la izquierda.
 		personaje->setPosition(loc.x - 3,loc.y);
@@ -163,6 +212,12 @@ void Juego::lanzarMina(){
 		this->addChild( mina );
 		mina->setPosition(posmina.x + 100,posmina.y - 90);
 		personaje->usarMina();
+		
+		/*//Cosas de colisiones:
+		mina->setTag(2);
+		_colMina->addObject(mina);
+		//Fin de cosas de colisiones.*/
+
 		if(personaje->getTiempoMina() >= 5){
 			personaje->retornaMina();
 			explosionMina = mina->explotarMina();
