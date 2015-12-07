@@ -25,9 +25,11 @@ public:
 	
 	cocos2d::Sprite *background;
 	Personaje* personaje;
+	cocos2d::Sprite *personajeSprite;
 	Mina* mina;
 	terrestres* enemigo1;
 	terrestres* enemigo2;
+	cocos2d::Sprite *enemigo2Sprite;
 	
 	//Prueba debug info
 	cocos2d::Label *label;
@@ -49,14 +51,19 @@ private:
 	 bool explosionMina;
 	 void lanzarMina();
 	 void contador(float);
+	 void saltar(float);
 
 	 void centerViewport(void);
-
-	  //COSAS DE COLISIONES(PRUEBA):
-protected:
-	 cocos2d::CCArray *_colPersonaje;
-     cocos2d::CCArray *_colMina; 
-	 //FIN DE COSAS DE COLISIONES.
+	 
+	 //Colisiones:
+	 private:
+		PhysicsWorld *sceneWorld;
+		/*PhysicsBody  *body;
+		PhysicsBody  *body2;*/
+	public:
+		void setPhysicsWorld(PhysicsWorld *world){sceneWorld = world;};
+		bool onContactBegin(PhysicsContact &contact); 
+	//
 };
 
 #endif 

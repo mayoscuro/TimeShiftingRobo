@@ -7,16 +7,53 @@ Personaje::Personaje(void)
 {
 	numMina = 0;
 	duracionMina = 0;
-	personajeSprite = Sprite::create("Personaje.jpg");
+	salto = 0;
+	maxAltura = 0;
+	//salto = false;
+	enAire = false;
+	minaApear = false;
+	personajeSprite = Sprite::create("Robo.png");
 	this->addChild( personajeSprite );
 }
 
 void Personaje::personajeAnim(int direccion){
 	if(direccion == 1){
-		personajeSprite->setTexture("personajeIzq.jpg");//Si dirección = 1 personaje mira a la izquierda.
+		personajeSprite->setTexture("RoboIzq.png");//Si dirección = 1 personaje mira a la izquierda.
 	}else if(direccion == 2){
-		personajeSprite->setTexture("personaje.jpg");//Didirección = 2 personaje mira derecha.
+		personajeSprite->setTexture("Robo.png");//Didirección = 2 personaje mira derecha.
 	}
+}
+
+void Personaje::setMaxAltura(int alturaMaxima){
+	this->maxAltura = alturaMaxima;
+}
+
+int Personaje::getMaxAltura(){
+	return maxAltura;
+}
+
+bool Personaje::getEnAire(){
+	return enAire;
+}
+
+void Personaje::setEnAire(bool esEnAire){
+	this->enAire = esEnAire;
+}
+
+bool Personaje::isMina(){
+	return minaApear;
+}
+
+/*int Personaje::getSalto(){
+	return salto;
+}
+
+void Personaje::setSalto(int salto){
+	this->salto = salto;
+}*/
+
+void Personaje::setIsMina(bool isMina){
+	minaApear = isMina;
 }
 
 int Personaje::getTiempoMina(){

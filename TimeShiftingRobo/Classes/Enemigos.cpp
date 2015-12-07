@@ -10,6 +10,7 @@ class Enemigos : public cocos2d::Layer {
 		virtual void perseguir(){};
 		virtual void atacar(){};
 		virtual void movNoMov(){};
+		virtual void animEnemigo(int){};
 		int tipo;
 		int pasosIzq;
 		int pasosDer;
@@ -18,18 +19,27 @@ class Enemigos : public cocos2d::Layer {
 
 class terrestres : public Enemigos{
 public:
+	cocos2d::Sprite *enemigo;
 	terrestres(int tipo){
-		pasosIzq = 50;
+		pasosIzq = 100;
 		pasosDer = 0;
-		cocos2d::Sprite *enemigo;
 		if(tipo== 1){
 			this->tipo = 1;
-			enemigo = Sprite::create("Mina.png");
+			enemigo = Sprite::create("E_BipedoDer.png");
 		}else{
 			this->tipo = 2;
-			enemigo = Sprite::create("CloseNormal.png");
+			enemigo = Sprite::create("la.png");
+
 		}
-		this->addChild( enemigo );
+		this->addChild( enemigo);
+	}
+
+	void animEnemigo(int direccion){
+		if(direccion == 1){
+			enemigo->setTexture("E_BipedoDer.png");
+		}else{
+			enemigo->setTexture("E_Bipedo.png");
+		}
 	}
 
 	void terrestres::ruta(){
