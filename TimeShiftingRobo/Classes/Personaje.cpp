@@ -52,6 +52,8 @@ void Personaje::setSalto(int salto){
 	this->salto = salto;
 }*/
 
+
+//Geters y seters relacionados con las minas:
 void Personaje::setIsMina(bool isMina){
 	minaApear = isMina;
 }
@@ -75,7 +77,6 @@ void Personaje::retornaMina(){
 int Personaje::getNumMina(){
 	return numMina;
 }
-
 
 
 

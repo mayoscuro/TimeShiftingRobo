@@ -1,6 +1,7 @@
 #include "Juego.h"
 //#include "LectorPersonaje.h"
 
+//Eliminar mina cuando choque contra personaje, hacer una función eliminarMina porque parece ser que se usará mucho.
 USING_NS_CC;
 
 //Cosas de colisiones buscar contactManager
@@ -27,7 +28,7 @@ bool Juego::init()
 	Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto edgeBody = PhysicsBody::createEdgeBox( Size(visibleSize.width * 20 ,visibleSize.height / 1.2), PhysicsMaterial(0,0,0) );
+	auto edgeBody = PhysicsBody::createEdgeBox( Size(visibleSize.width * 20 ,visibleSize.height / 1.2), PhysicsMaterial(0.0f,0.0f,1.0f) );
     
     auto edgeNode = Node::create();
     edgeNode ->setPosition( Point( visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y ) );
@@ -41,7 +42,7 @@ bool Juego::init()
 
 		personaje = new Personaje;
 		personaje->setPosition( Point( visibleSize.width / 5 + origin.x, visibleSize.height / 4 + origin.y) );
-		auto personajeBody = PhysicsBody::createBox(personaje->personajeSprite->getContentSize(),PhysicsMaterial(0,0,0));
+		auto personajeBody = PhysicsBody::createBox(personaje->personajeSprite->getContentSize(),PhysicsMaterial(0.0f,0.0f,1.0f));
 		personajeBody->setCollisionBitmask(1);
 		personajeBody->setDynamic(true);
 		personajeBody->setRotationEnable(false);
@@ -49,23 +50,87 @@ bool Juego::init()
 		personaje->setPhysicsBody( personajeBody );
 		personaje->setPosition( Point( visibleSize.width / 5 + origin.x, visibleSize.height / 4 + origin.y) );
 		this->addChild( personaje );
-
+		
+		
 	}
 	{
 	//Prueba de visualización de enemigos:
 		enemigo1 = new terrestres(1);
 		enemigo1->setPosition( Point( visibleSize.width / 5 + origin.x +500, visibleSize.height / 4 + origin.y) );
 		this->addChild( enemigo1 , 1 );
-
 		enemigo2 = new terrestres(2);
-		enemigo2->setPosition( Point( visibleSize.width / 5 + origin.x/*+1000*/, visibleSize.height / 6.5 + origin.y) );
+		enemigo2->setPosition( Point( visibleSize.width / 5 + origin.x +1300, visibleSize.height / 6.5 + origin.y) );
 		auto enemigo2Body = PhysicsBody::createBox(enemigo2->enemigo->getContentSize(),PhysicsMaterial(0,0,0));
 		enemigo2Body->setCollisionBitmask(2);
 		enemigo2Body->setContactTestBitmask(true);
+		enemigo2Body->setRotationEnable(false);
 		enemigo2Body->setDynamic(true);
 		enemigo2->setPhysicsBody( enemigo2Body );
 		this->addChild( enemigo2);
 	//Fin Prueba
+
+		//Prueba visualización de llaves:
+
+		llave1 = new llaves(1);
+		llave1->setPosition( Point( visibleSize.width / 5 + origin.x +1000, visibleSize.height / 4 + origin.y) );
+		auto llave1Body = PhysicsBody::createBox(llave1->llave->getContentSize(),PhysicsMaterial(0,0,0));
+		llave1Body->setCollisionBitmask(11);
+		llave1Body->setContactTestBitmask(true);
+		llave1Body->setDynamic(false);
+		llave1->setPhysicsBody( llave1Body );
+		this->addChild( llave1 );
+		
+		llave2 = new llaves(2);
+		llave2->setPosition( Point( visibleSize.width / 5 + origin.x +2000, visibleSize.height / 4 + origin.y) );
+		auto llave2Body = PhysicsBody::createBox(llave2->llave->getContentSize(),PhysicsMaterial(0,0,0));
+		llave2Body->setCollisionBitmask(10);
+		llave2Body->setContactTestBitmask(true);
+		llave2Body->setDynamic(false);
+		llave2->setPhysicsBody( llave2Body );
+		this->addChild( llave2 );
+		//Fin llaves
+
+		//Aquí va a ir el tema plataformas:
+		plataforma = new Plataforma();
+		plataforma->setPosition( Point( visibleSize.width / 5 + origin.x + 100 , visibleSize.height / 4 + origin.y) );
+		auto plataformaBody = PhysicsBody::createBox(plataforma->plataforma->getContentSize(),PhysicsMaterial(0,0,0));
+		plataformaBody->setCollisionBitmask(7);
+		plataformaBody->setContactTestBitmask(true);
+		plataformaBody->setRotationEnable(false);
+		plataformaBody->setDynamic(false);
+		plataforma->setPhysicsBody( plataformaBody );
+		this->addChild(plataforma);
+		//Fin Plataformas.
+
+		//Aquí las pruebas del interruptor:
+		interruptor = new Interruptor();
+		interruptor->setPosition( Point( visibleSize.width / 5 + origin.x - 250 , visibleSize.height / 4 + origin.y) );
+		auto interruptorBody = PhysicsBody::createBox(interruptor->interruptor->getContentSize(),PhysicsMaterial(0,0,0));
+		interruptorBody->setCollisionBitmask(12);
+		interruptorBody->setContactTestBitmask(true);
+		interruptorBody->setRotationEnable(false);
+		interruptorBody->setDynamic(false);
+		interruptor->setPhysicsBody( interruptorBody );
+		this->addChild(interruptor);
+		//Fin de pruebas del interruptor
+
+		mina = new Mina();
+		mina->setPosition( personaje->getPosition() );
+		this->addChild( mina);
+		mina->setVisible(false);
+
+		/*//Pruebas de puerta:
+		puerta = new Puerta();
+		puerta->setPosition( Point( visibleSize.width / 5 + origin.x - 250 , visibleSize.height / 4 + origin.y) );
+		auto puertaBody = PhysicsBody::createBox(puerta->puerta->getContentSize(),PhysicsMaterial(0,0,0));
+		puertaBody->setCollisionBitmask(13);
+		puertaBody->setContactTestBitmask(true);
+		puertaBody->setRotationEnable(false);
+		puertaBody->setDynamic(false);
+		puerta->setPhysicsBody( puertaBody );
+		this->addChild(puerta);
+		//*/
+
 	}
 	//Colisiones:
 	auto contactListener = EventListenerPhysicsContact::create();
@@ -106,13 +171,18 @@ bool Juego::init()
 	//Para llamar al timer:
 
 		this->schedule(schedule_selector(Juego::contador), 1.0f);
-		this->schedule(schedule_selector(Juego::saltar), 0.009f);
+		//this->schedule(schedule_selector(Juego::saltar), 0.009f);
 
 
 	return true;
 
 }
-void Juego::saltar(float delta){
+
+void Juego::setPhysicsWorld(PhysicsWorld *world) {
+	sceneWorld = world;
+	sceneWorld->setGravity(Vec2(0,-98.0f));
+}
+/*void Juego::saltar(float delta){
 	if(personaje->getEnAire() && personaje->getMaxAltura() <= 20){
 		personaje->setPosition(personaje->getPosition().x , personaje->getPosition().y +3);
 		personaje->setMaxAltura(personaje->getMaxAltura() + 1);
@@ -120,7 +190,7 @@ void Juego::saltar(float delta){
 		personaje->setEnAire(false);
 		personaje->setMaxAltura(0);
 	}
-}
+}*/
 
 bool Juego::onContactBegin(PhysicsContact &contact){
 	PhysicsBody *a = contact.getShapeA()->getBody();
@@ -129,11 +199,15 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 	if(3 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask()|| 
 		1 == a->getCollisionBitmask() && 3 == b->getCollisionBitmask() ){
 			label->setString("Colisiona, personaje, mina");
-			
-			//personaje->setPosition(personaje->getPosition().x , personaje->getPosition().y * 2/*personaje->getSalto()*/);
-			//PUTA MINA QUE NO SE BORRA:
-			//mina->removeFromPhysicsWorld();
-			//mina->removeAllChildrenWithCleanup(true);
+			accionSalto = JumpBy::create(2,Point(0, personaje->getPositionY()), 300, 1);//Para saltar??
+			personaje->runAction(accionSalto);
+			//EliminarMina:
+			personaje->setIsMina(false);
+			personaje->setTiempoMina(0);	
+			personaje->retornaMina();//Resta 1 al numero de minas lanzadas.
+			//explosionMina = mina->explotarMina();//Por ahora no hace nada, pero hara la animación
+			mina->removeFromPhysicsWorld();
+			mina->setVisible(false);
 	}
 
 	if(3 == a->getCollisionBitmask() && 2 == b->getCollisionBitmask()|| 
@@ -149,7 +223,28 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 		//personaje->removeAllChildrenWithCleanup(true);	
 		//label->setString("Colisiona, con enemigo");
 	}
-	
+	//Tema colisión con llaves:
+	if(1 == a->getCollisionBitmask() && 10 == b->getCollisionBitmask() ||
+		10 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask()){//Encontrar llave 2
+		llave2->setVisible(false);
+		llave2->setRecogida(true);
+		label->setString("LLave 1 encontrada");
+		llave2->removeFromPhysicsWorld();
+	}else if(1 == a->getCollisionBitmask() && 11 == b->getCollisionBitmask() ||
+		11 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask()){//Encontrar llave 1
+		llave1->setVisible(false);
+		llave1->removeFromPhysicsWorld();
+		label->setString("LLave 2 encontrada");
+		llave1->setRecogida(true);
+	}
+	//Colisión personaje/Interruptor:
+	if(12 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask()|| 
+		1 == a->getCollisionBitmask() && 12 == b->getCollisionBitmask() ){
+		label->setString("tocando el interruptor");
+		interruptor->setEsActivo(true);
+	}else{
+		interruptor->setEsActivo(false);
+	}
 	return true;
 }
 //
@@ -160,14 +255,13 @@ void Juego::contador(float delta){
 		personaje->setTiempoMina(personaje->getTiempoMina() + 1);
 
 		//Para que la mina desaparezca cuando explote:
-		if(personaje->getTiempoMina() >= 3 && personaje->isMina()){
+		if(personaje->getTiempoMina() >= 3 && personaje->isMina() && personaje->getNumMina() > 0){
 			personaje->setIsMina(false);
 			personaje->setTiempoMina(0);	
-			personaje->retornaMina();
+			personaje->retornaMina();//Resta 1 al numero de minas lanzadas.
 			//explosionMina = mina->explotarMina();//Por ahora no hace nada, pero hara la animación
-			//this->removeChild(mina, true);
-			//mina->removeAllChildren();//[[[[¡¡¡¡¡¡ARREGLAAAAAAAR!!!!!]]]]
-			//mina->setVisible(false);//Apaño por el momento...Que tampoco va...
+			mina->removeFromPhysicsWorld();
+			mina->setVisible(false);//Se aproxima a lo que quiero.
 			label->setString("borrado");
 			//		
 		}
@@ -211,11 +305,28 @@ void Juego::update(float delta) {
 		personaje->personajeAnim(2);
 		personaje->setPosition(loc.x + 3,loc.y);
 	}
+
+	//Mina va con el personaje:
+	if(!personaje->isMina()){
+		mina->setPosition(Vec2(personaje->getPositionX() + 130, personaje->getPositionY()));
+	}
+	//Abrir la puerta si:
+	/*if(llave1->esRecigida() && !llave2->esRecigida() ){
+
+	}else if(llave2->esRecigida() && !llave1->esRecigida()){
+	
+	}else*/ if(llave1->esRecigida() && llave2->esRecigida()){
+		//label->setString("Puerta abierta");//Esto funciona, pero a la hora del debug lo quito.
+	}
+
+	plataforma->rutaPlataforma();
+
 }
 // Cocos requiere que createScene sea estatico, Esto es para crear otro miembro statico.
 std::map<cocos2d::EventKeyboard::KeyCode,
         std::chrono::high_resolution_clock::time_point> Juego::keys;
 
+//Función que controla las teclas de un solo pulsado:
 void Juego::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 {
 	switch(keyCode){
@@ -224,27 +335,40 @@ void Juego::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 		break;
 	case EventKeyboard::KeyCode::KEY_W:
 		personaje->setEnAire(true);
+		
+		break;
+	case EventKeyboard::KeyCode::KEY_SPACE://Boton de acción
+		if(interruptor->getEsActivo()){
+			label->setString("Puente abierto");
+			interruptor->removeFromPhysicsWorld();//Eliminar las fisica del interruptor, para que no pueda activar 10000000 puentes
+			//FALTA:
+			//crear el puente
+			//Y creo que ya.
+		}
 		break;
 	}
 }
 
+//Función que lleva el tema del lanzamiento de minas:
 void Juego::lanzarMina(){	
-	if((personaje->getNumMina()) < 2){
-		Mina* mina = new Mina();
-		Vec2 posmina = personaje->getPosition();
-		auto minaBody = PhysicsBody::createCircle(mina->mina->getContentSize().width/2,PhysicsMaterial(0,0,0));
+	if((personaje->getNumMina()) < 1){
+		lanzamientoDeMina = JumpBy::create(1,Point(200, 0), 50, 1);//Para saltar??
+		mina->runAction(lanzamientoDeMina);
+		auto minaBody = PhysicsBody::createBox(mina->mina->getContentSize()/25,PhysicsMaterial(0.0f,0.0f,1.0f));
 		minaBody->setCollisionBitmask(3);
 		minaBody->setContactTestBitmask(true);
 		minaBody->setDynamic(true);
 		mina->setPhysicsBody( minaBody );
-		this->addChild( mina);
-		mina->setPosition(posmina.x + 100,posmina.y - 90);
+		mina->setVisible(true);
 		personaje->setIsMina(true);
-		personaje->usarMina();
+		personaje->usarMina();//numMina++
 
 	}	
 }
 
+
+
+//Función del movimiento del enemigo 1 (Abría que hacer que funcionará para todos los enemigos(tal vez pasandola a la clase enemigos...))
 void Juego::moverEnemigos(Vec2 locEnemigo){
 	if(enemigo1->pasosDer < 100 ){
 		enemigo1->setPosition(locEnemigo.x + 3,locEnemigo.y);

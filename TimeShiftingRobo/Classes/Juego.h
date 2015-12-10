@@ -6,6 +6,8 @@
 #include "Personaje.h"
 #include "Mina.h"
 #include "Enemigos.cpp"
+#include "ObjetosInmoviles.cpp"
+
 #define COCOS2D_DEBUG 1;//COSAS PARA DEBUG DE COCOS...
 
 
@@ -30,6 +32,8 @@ public:
 	terrestres* enemigo1;
 	terrestres* enemigo2;
 	cocos2d::Sprite *enemigo2Sprite;
+	JumpBy* accionSalto;
+	JumpBy* lanzamientoDeMina;
 	
 	//Prueba debug info
 	cocos2d::Label *label;
@@ -52,6 +56,11 @@ private:
 	 void lanzarMina();
 	 void contador(float);
 	 void saltar(float);
+	 llaves* llave1;
+	 llaves* llave2;
+	 Plataforma* plataforma;
+	 Interruptor* interruptor;
+	 Puerta* puerta;
 
 	 void centerViewport(void);
 	 
@@ -61,7 +70,7 @@ private:
 		/*PhysicsBody  *body;
 		PhysicsBody  *body2;*/
 	public:
-		void setPhysicsWorld(PhysicsWorld *world){sceneWorld = world;};
+		void setPhysicsWorld(PhysicsWorld *world);
 		bool onContactBegin(PhysicsContact &contact); 
 	//
 };

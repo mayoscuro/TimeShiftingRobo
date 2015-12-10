@@ -12,3 +12,4 @@ bool Mina::explotarMina(){
 	//this->removeAllChildren();
 	return true;
 }
+
