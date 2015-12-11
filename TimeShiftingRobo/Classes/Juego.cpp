@@ -1,7 +1,5 @@
 #include "Juego.h"
-//#include "LectorPersonaje.h"
 
-//Eliminar mina cuando choque contra personaje, hacer una función eliminarMina porque parece ser que se usará mucho.
 USING_NS_CC;
 
 //Cosas de colisiones buscar contactManager
@@ -64,7 +62,7 @@ bool Juego::init()
 		enemigo2Body->setCollisionBitmask(2);
 		enemigo2Body->setContactTestBitmask(true);
 		enemigo2Body->setRotationEnable(false);
-		enemigo2Body->setDynamic(true);
+		enemigo2Body->setDynamic(false);
 		enemigo2->setPhysicsBody( enemigo2Body );
 		this->addChild( enemigo2);
 	//Fin Prueba
@@ -92,12 +90,12 @@ bool Juego::init()
 
 		//Aquí va a ir el tema plataformas:
 		plataforma = new Plataforma();
-		plataforma->setPosition( Point( visibleSize.width / 5 + origin.x + 100 , visibleSize.height / 4 + origin.y) );
-		auto plataformaBody = PhysicsBody::createBox(plataforma->plataforma->getContentSize(),PhysicsMaterial(0,0,0));
+		plataforma->setPosition( Point( visibleSize.width / 5 + origin.x + 100 , visibleSize.height / 3 + origin.y) );
+		auto plataformaBody = PhysicsBody::createBox(plataforma->plataforma->getContentSize(),PhysicsMaterial(0.0f,0.0f,1.0f));
 		plataformaBody->setCollisionBitmask(7);
 		plataformaBody->setContactTestBitmask(true);
 		plataformaBody->setRotationEnable(false);
-		plataformaBody->setDynamic(false);
+		plataformaBody->setDynamic(true);
 		plataforma->setPhysicsBody( plataformaBody );
 		this->addChild(plataforma);
 		//Fin Plataformas.
@@ -171,7 +169,6 @@ bool Juego::init()
 	//Para llamar al timer:
 
 		this->schedule(schedule_selector(Juego::contador), 1.0f);
-		//this->schedule(schedule_selector(Juego::saltar), 0.009f);
 
 
 	return true;
@@ -182,39 +179,40 @@ void Juego::setPhysicsWorld(PhysicsWorld *world) {
 	sceneWorld = world;
 	sceneWorld->setGravity(Vec2(0,-98.0f));
 }
-/*void Juego::saltar(float delta){
-	if(personaje->getEnAire() && personaje->getMaxAltura() <= 20){
-		personaje->setPosition(personaje->getPosition().x , personaje->getPosition().y +3);
-		personaje->setMaxAltura(personaje->getMaxAltura() + 1);
-	}else{
-		personaje->setEnAire(false);
-		personaje->setMaxAltura(0);
-	}
-}*/
 
 bool Juego::onContactBegin(PhysicsContact &contact){
 	PhysicsBody *a = contact.getShapeA()->getBody();
 	PhysicsBody *b = contact.getShapeB()->getBody();
 	//Comprobar si los body han colisionado:
+	
+	if(7 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask()|| 
+		1 == a->getCollisionBitmask() && 7 == b->getCollisionBitmask() ){
+			personaje->setPlataformCollision(true);
+	}else{
+			personaje->setPlataformCollision(false);
+	}
+	
 	if(3 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask()|| 
 		1 == a->getCollisionBitmask() && 3 == b->getCollisionBitmask() ){
 			label->setString("Colisiona, personaje, mina");
-			accionSalto = JumpBy::create(2,Point(0, personaje->getPositionY()), 300, 1);//Para saltar??
-			personaje->runAction(accionSalto);
-			//EliminarMina:
-			personaje->setIsMina(false);
-			personaje->setTiempoMina(0);	
-			personaje->retornaMina();//Resta 1 al numero de minas lanzadas.
-			//explosionMina = mina->explotarMina();//Por ahora no hace nada, pero hara la animación
-			mina->removeFromPhysicsWorld();
-			mina->setVisible(false);
+			eliminarMina();
+			if(personaje->getOrientacion() == 2){
+				accionSalto = JumpBy::create(2,Point(500, personaje->getPositionY()), 100, 1);//Para saltar??
+				personaje->runAction(accionSalto);
+			}else if(personaje->getOrientacion() == 1){
+				accionSalto = JumpBy::create(2,Point(-500, personaje->getPositionY()), 100, 1);
+				personaje->runAction(accionSalto);
+			}
+			
 	}
 
 	if(3 == a->getCollisionBitmask() && 2 == b->getCollisionBitmask()|| 
 		2 == a->getCollisionBitmask() && 3 == b->getCollisionBitmask() ){
+			eliminarMina();
 			label->setString("Colisiona, enemigo mina");
 			enemigo2->removeFromPhysicsWorld();
 			enemigo2->removeAllChildrenWithCleanup(true);
+			
 	}
 	
 	if(1 == a->getCollisionBitmask() && 2 == b->getCollisionBitmask() ||
@@ -243,7 +241,7 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 		label->setString("tocando el interruptor");
 		interruptor->setEsActivo(true);
 	}else{
-		interruptor->setEsActivo(false);
+		interruptor->setEsActivo(false);//Pasar al update haber si se soluciona.
 	}
 	return true;
 }
@@ -253,20 +251,8 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 void Juego::contador(float delta){
 	if(personaje->isMina()){
 		personaje->setTiempoMina(personaje->getTiempoMina() + 1);
-
-		//Para que la mina desaparezca cuando explote:
-		if(personaje->getTiempoMina() >= 3 && personaje->isMina() && personaje->getNumMina() > 0){
-			personaje->setIsMina(false);
-			personaje->setTiempoMina(0);	
-			personaje->retornaMina();//Resta 1 al numero de minas lanzadas.
-			//explosionMina = mina->explotarMina();//Por ahora no hace nada, pero hara la animación
-			mina->removeFromPhysicsWorld();
-			mina->setVisible(false);//Se aproxima a lo que quiero.
-			label->setString("borrado");
-			//		
-		}
 	}
-
+	eliminarMina();
 	
 }
 
@@ -300,11 +286,14 @@ void Juego::update(float delta) {
 	if(isKeyPressed(EventKeyboard::KeyCode::KEY_A)) {
 		personaje->personajeAnim(1);//Para que el personaje mire a la izquierda.
 		personaje->setPosition(loc.x - 3,loc.y);
-    }
-	else if(isKeyPressed(EventKeyboard::KeyCode::KEY_D)){
+    }else if(isKeyPressed(EventKeyboard::KeyCode::KEY_D)){
 		personaje->personajeAnim(2);
 		personaje->setPosition(loc.x + 3,loc.y);
 	}
+	//Personaje en una plataforma//Esto hay que apañarlo de alguna forma.
+	/*if(personaje->getPlataformCollision()){
+		personaje->setPosition(Vec2(personaje->getPositionX(), plataforma->getPositionY()*1.6));
+	}*/
 
 	//Mina va con el personaje:
 	if(!personaje->isMina()){
@@ -331,11 +320,16 @@ void Juego::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 {
 	switch(keyCode){
 	case EventKeyboard::KeyCode::KEY_S:
-		lanzarMina();
+		lanzarMina(1);//lanzarMina modo tirar lejos
 		break;
+	/*case EventKeyboard::KeyCode::KEY_D:
+		personaje->setOrientacion(2);
+		break;
+	case EventKeyboard::KeyCode::KEY_A:
+		personaje->setOrientacion(1);
+		break;*/
 	case EventKeyboard::KeyCode::KEY_W:
-		personaje->setEnAire(true);
-		
+		lanzarMina(2);//lanzarMina modo dejar caer.
 		break;
 	case EventKeyboard::KeyCode::KEY_SPACE://Boton de acción
 		if(interruptor->getEsActivo()){
@@ -350,20 +344,38 @@ void Juego::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 }
 
 //Función que lleva el tema del lanzamiento de minas:
-void Juego::lanzarMina(){	
+void Juego::lanzarMina(int tipo){	
 	if((personaje->getNumMina()) < 1){
-		lanzamientoDeMina = JumpBy::create(1,Point(200, 0), 50, 1);//Para saltar??
-		mina->runAction(lanzamientoDeMina);
-		auto minaBody = PhysicsBody::createBox(mina->mina->getContentSize()/25,PhysicsMaterial(0.0f,0.0f,1.0f));
+		personaje->setIsMina(true);
+		if(tipo == 1){
+			lanzamientoDeMina = JumpBy::create(1,Point(400, 0), 50, 1);//Para saltar??
+			mina->runAction(lanzamientoDeMina);
+		}else{
+			mina->setPosition(personaje->getPosition());
+		}
+		auto minaBody = PhysicsBody::createBox(mina->mina->getContentSize()/15,PhysicsMaterial(0.0f,0.0f,1.0f));
 		minaBody->setCollisionBitmask(3);
 		minaBody->setContactTestBitmask(true);
 		minaBody->setDynamic(true);
 		mina->setPhysicsBody( minaBody );
 		mina->setVisible(true);
-		personaje->setIsMina(true);
 		personaje->usarMina();//numMina++
 
 	}	
+}
+
+void Juego::eliminarMina(){
+	//Para que la mina desaparezca cuando explote:
+		if(personaje->getTiempoMina() >= 3 && personaje->isMina() && personaje->getNumMina() > 0){
+			personaje->setIsMina(false);
+			personaje->setTiempoMina(0);	
+			personaje->retornaMina();//Resta 1 al numero de minas lanzadas.
+			//explosionMina = mina->explotarMina();//Por ahora no hace nada, pero hara la animación
+			mina->removeFromPhysicsWorld();
+			mina->setVisible(false);//Se aproxima a lo que quiero.
+			label->setString("borrado");
+			//		
+		}
 }
 
 

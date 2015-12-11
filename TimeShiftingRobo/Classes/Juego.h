@@ -53,7 +53,8 @@ private:
         std::chrono::high_resolution_clock::time_point> keys;
 
 	 bool explosionMina;
-	 void lanzarMina();
+	 void lanzarMina(int);
+	 void eliminarMina();
 	 void contador(float);
 	 void saltar(float);
 	 llaves* llave1;

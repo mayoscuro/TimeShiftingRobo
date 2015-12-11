@@ -7,11 +7,9 @@ Personaje::Personaje(void)
 {
 	numMina = 0;
 	duracionMina = 0;
-	salto = 0;
-	maxAltura = 0;
-	//salto = false;
-	enAire = false;
+	isPlataformCollision = false;
 	minaApear = false;
+	orientacion = 2;
 	personajeSprite = Sprite::create("Robo.png");
 	this->addChild( personajeSprite );
 }
@@ -19,39 +17,32 @@ Personaje::Personaje(void)
 void Personaje::personajeAnim(int direccion){
 	if(direccion == 1){
 		personajeSprite->setTexture("RoboIzq.png");//Si dirección = 1 personaje mira a la izquierda.
+		orientacion = 1;
 	}else if(direccion == 2){
 		personajeSprite->setTexture("Robo.png");//Didirección = 2 personaje mira derecha.
+		orientacion = 2;
 	}
 }
 
-void Personaje::setMaxAltura(int alturaMaxima){
-	this->maxAltura = alturaMaxima;
+int Personaje::getOrientacion(){
+	return orientacion;
 }
 
-int Personaje::getMaxAltura(){
-	return maxAltura;
+void Personaje::setOrientacion(int orientacion){
+	this->orientacion = orientacion;
 }
 
-bool Personaje::getEnAire(){
-	return enAire;
+bool Personaje::getPlataformCollision(){
+	return isPlataformCollision;
 }
 
-void Personaje::setEnAire(bool esEnAire){
-	this->enAire = esEnAire;
+void Personaje::setPlataformCollision(bool hayColision){
+	isPlataformCollision = hayColision;
 }
 
 bool Personaje::isMina(){
 	return minaApear;
 }
-
-/*int Personaje::getSalto(){
-	return salto;
-}
-
-void Personaje::setSalto(int salto){
-	this->salto = salto;
-}*/
-
 
 //Geters y seters relacionados con las minas:
 void Personaje::setIsMina(bool isMina){
