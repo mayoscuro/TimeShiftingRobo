@@ -73,7 +73,8 @@ private:
 		PhysicsBody  *body2;*/
 	public:
 		void setPhysicsWorld(PhysicsWorld *world);
-		bool onContactBegin(PhysicsContact &contact); 
+		bool onContactBegin(PhysicsContact &contact);
+		void onContactSeparate(PhysicsContact &contact);
 	//
 };
 

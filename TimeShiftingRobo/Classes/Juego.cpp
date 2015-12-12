@@ -38,6 +38,12 @@ bool Juego::init()
     
 		this->addChild( background );
 
+		//Pruebas de puerta:
+		puerta = new Puerta();
+		puerta->setPosition( Point( visibleSize.width / 5 + origin.x -1000 , visibleSize.height / 4 + origin.y) );
+		this->addChild(puerta);
+		//
+
 		personaje = new Personaje;
 		personaje->setPosition( Point( visibleSize.width / 5 + origin.x, visibleSize.height / 4 + origin.y) );
 		auto personajeBody = PhysicsBody::createBox(personaje->personajeSprite->getContentSize(),PhysicsMaterial(0.0f,0.0f,1.0f));
@@ -117,23 +123,16 @@ bool Juego::init()
 		this->addChild( mina);
 		mina->setVisible(false);
 
-		/*//Pruebas de puerta:
-		puerta = new Puerta();
-		puerta->setPosition( Point( visibleSize.width / 5 + origin.x - 250 , visibleSize.height / 4 + origin.y) );
-		auto puertaBody = PhysicsBody::createBox(puerta->puerta->getContentSize(),PhysicsMaterial(0,0,0));
-		puertaBody->setCollisionBitmask(13);
-		puertaBody->setContactTestBitmask(true);
-		puertaBody->setRotationEnable(false);
-		puertaBody->setDynamic(false);
-		puerta->setPhysicsBody( puertaBody );
-		this->addChild(puerta);
-		//*/
 
 	}
 	//Colisiones:
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(Juego::onContactBegin, this);
+	contactListener->onContactSeparate = CC_CALLBACK_1(Juego::onContactSeparate, this);
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
+
+	//auto contactListener2 = EventListenerPhysicsContact::create();
+	//this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 
 	//
 	
@@ -246,7 +245,17 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 		interruptor->setEsActivo(false);//Pasar al update haber si se soluciona.
 	}
 	return true;
-}
+}void Juego::onContactSeparate(PhysicsContact &contact){
+	PhysicsBody *a = contact.getShapeA()->getBody();
+	PhysicsBody *b = contact.getShapeB()->getBody();
+
+	//"Descolisión" personaje/Interruptor:
+	if(12 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask()|| 
+		1 == a->getCollisionBitmask() && 12 == b->getCollisionBitmask() ){
+		interruptor->setEsActivo(false);
+	}
+
+}
 //
 
  
@@ -298,10 +307,15 @@ void Juego::update(float delta) {
 		personaje->setPosition(Vec2(personaje->getPositionX(), plataforma->getPositionY()*1.6));
 	}*/
 
+	if(personaje->getPosition() > Vec2(puerta->getPositionX() -100 ,puerta->getPositionY() -100) && personaje->getPosition() < Vec2(puerta->getPositionX() + 100 ,puerta->getPositionY() +100)){
+		puerta->personajeEnLaPuerta(true);
+	}else{
+		puerta->personajeEnLaPuerta(false);
+	}
 	//Mina va con el personaje:
 	if(!personaje->isMina()){
 		if(personaje->getOrientacion()== 2){
-		mina->setPosition(Vec2(personaje->getPositionX() + 130, personaje->getPositionY()));
+			mina->setPosition(Vec2(personaje->getPositionX() + 130, personaje->getPositionY()));
 		}else{
 			mina->setPosition(Vec2(personaje->getPositionX() - 130, personaje->getPositionY()));
 		}
@@ -345,6 +359,11 @@ void Juego::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 			//FALTA:
 			//crear el puente
 			//Y creo que ya.
+		}else if(puerta->isPersoanje()){
+			label->setString("abierta");
+			accionSalto = JumpBy::create(2,Point(0, puerta->getPositionY()), 50, 1);//Para mover la puerta desde aquí?Si
+			puerta->runAction(accionSalto);
+			//Aqui va la animación de abrir puerta.
 		}
 		break;
 	}

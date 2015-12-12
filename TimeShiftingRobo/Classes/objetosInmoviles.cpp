@@ -88,11 +88,22 @@ public:
 };
 //Pasar a Objetosmoviles
 class Puerta : public ObjetosInmoviles{
+private:
+	bool personajeEnPuerta;
 public:
 	cocos2d::Sprite *puerta;
 
 	Puerta(){
 		puerta = Sprite::create("Puerta_Amarilla.png");//Cambiar por la imagen que sea.
+		this->addChild(puerta);
+	}
+
+	void personajeEnLaPuerta(bool personajeEnPuerta){
+		this->personajeEnPuerta = personajeEnPuerta; 
+	}
+
+	bool isPersoanje(){
+		return personajeEnPuerta;
 	}
 
 
