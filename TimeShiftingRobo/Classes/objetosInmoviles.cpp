@@ -48,7 +48,7 @@ public:
 	Plataforma(){
 		alturasum = 0;
 		alturarest = 70;
-		plataforma = Sprite::create("la.png");//Sustituir por el dibujo de la plataforma
+		plataforma = Sprite::create("Plataforma.png");//Sustituir por el dibujo de la plataforma
 		this->addChild(plataforma);
 	}
 
@@ -73,8 +73,9 @@ public:
 	cocos2d::Sprite *interruptor;
 
 	Interruptor(){
-		interruptor = Sprite::create("Mina.png");//Cambiar por la imagen que sea.
+		interruptor = Sprite::create("Boton_Desactivado.png");//Cambiar por la imagen que sea.
 		activo = false;
+		interruptor->isFlipX();
 		this->addChild(interruptor);
 	}
 	bool getEsActivo(){

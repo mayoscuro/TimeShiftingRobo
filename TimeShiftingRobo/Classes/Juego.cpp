@@ -91,11 +91,11 @@ bool Juego::init()
 		//Aquí va a ir el tema plataformas:
 		plataforma = new Plataforma();
 		plataforma->setPosition( Point( visibleSize.width / 5 + origin.x + 100 , visibleSize.height / 3 + origin.y) );
-		auto plataformaBody = PhysicsBody::createBox(plataforma->plataforma->getContentSize(),PhysicsMaterial(0.0f,0.0f,1.0f));
+		auto plataformaBody = PhysicsBody::createBox(plataforma->plataforma->getContentSize()/ 5,PhysicsMaterial(0.0f,0.0f,1.0f));
 		plataformaBody->setCollisionBitmask(7);
 		plataformaBody->setContactTestBitmask(true);
 		plataformaBody->setRotationEnable(false);
-		plataformaBody->setDynamic(true);
+		plataformaBody->setDynamic(false);
 		plataforma->setPhysicsBody( plataformaBody );
 		this->addChild(plataforma);
 		//Fin Plataformas.
@@ -177,6 +177,7 @@ bool Juego::init()
 
 void Juego::setPhysicsWorld(PhysicsWorld *world) {
 	sceneWorld = world;
+	//sceneWorld->
 	sceneWorld->setGravity(Vec2(0,-98.0f));
 }
 
@@ -187,6 +188,7 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 	
 	if(7 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask()|| 
 		1 == a->getCollisionBitmask() && 7 == b->getCollisionBitmask() ){
+			//jointPlataform->construct(a,b,Vec2(1,2));
 			personaje->setPlataformCollision(true);
 	}else{
 			personaje->setPlataformCollision(false);
@@ -278,6 +280,7 @@ void Juego::centerViewport()	{
 void Juego::update(float delta) {
     // Función que comprueba si las teclas A y D estan siendo pulsadas y mueven al personaje a derecha o izquierda.
     Node::update(delta);
+
 	Vec2 loc = personaje->getPosition();
 	Vec2 locEscenario = background->getPosition();
 	Vec2 locEnemigo = enemigo1->getPosition();
@@ -297,7 +300,11 @@ void Juego::update(float delta) {
 
 	//Mina va con el personaje:
 	if(!personaje->isMina()){
+		if(personaje->getOrientacion()== 2){
 		mina->setPosition(Vec2(personaje->getPositionX() + 130, personaje->getPositionY()));
+		}else{
+			mina->setPosition(Vec2(personaje->getPositionX() - 130, personaje->getPositionY()));
+		}
 	}
 	//Abrir la puerta si:
 	/*if(llave1->esRecigida() && !llave2->esRecigida() ){
@@ -347,11 +354,20 @@ void Juego::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 void Juego::lanzarMina(int tipo){	
 	if((personaje->getNumMina()) < 1){
 		personaje->setIsMina(true);
-		if(tipo == 1){
-			lanzamientoDeMina = JumpBy::create(1,Point(400, 0), 50, 1);//Para saltar??
-			mina->runAction(lanzamientoDeMina);
+		if(personaje->getOrientacion()==2){	
+			if(tipo == 1){
+				lanzamientoDeMina = JumpBy::create(1,Point(300, 0), 40, 1);//Para saltar??
+				mina->runAction(lanzamientoDeMina);
+			}else{
+				mina->setPosition(personaje->getPosition());
+			}
 		}else{
-			mina->setPosition(personaje->getPosition());
+			if(tipo == 1){
+				lanzamientoDeMina = JumpBy::create(1,Point(-300, 0), 40, 1);//Para saltar??
+				mina->runAction(lanzamientoDeMina);
+			}else{
+				mina->setPosition(personaje->getPosition());
+			}
 		}
 		auto minaBody = PhysicsBody::createBox(mina->mina->getContentSize()/15,PhysicsMaterial(0.0f,0.0f,1.0f));
 		minaBody->setCollisionBitmask(3);

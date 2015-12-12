@@ -67,6 +67,7 @@ private:
 	 
 	 //Colisiones:
 	 private:
+		 //PhysicsJointFixed* jointPlataform;
 		PhysicsWorld *sceneWorld;
 		/*PhysicsBody  *body;
 		PhysicsBody  *body2;*/
