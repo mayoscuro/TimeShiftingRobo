@@ -33,8 +33,8 @@ bool Juego::init()
     edgeNode->setPhysicsBody( edgeBody );
 	this->addChild( edgeNode );
 		{
-		background = Sprite::create( "Escenario1.jpg" );
-		background->setPosition( Point( 6150,2750) );//Busacar sin numeros magicos
+		background = Sprite::create( "Escenario1.png" );
+		background->setPosition( Point( 10250, 2000) );//Busacar sin numeros magicos
     
 		this->addChild( background );
 
