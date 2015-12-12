@@ -61,7 +61,8 @@ private:
 	 llaves* llave2;
 	 Plataforma* plataforma;
 	 Interruptor* interruptor;
-	 Puerta* puerta;
+	 Puerta* puerta1;
+	 Puerta* puerta2;
 
 	 void centerViewport(void);
 	 

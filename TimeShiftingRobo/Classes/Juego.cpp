@@ -26,7 +26,7 @@ bool Juego::init()
 	Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto edgeBody = PhysicsBody::createEdgeBox( Size(visibleSize.width * 20 ,visibleSize.height / 1.2), PhysicsMaterial(0.0f,0.0f,1.0f) );
+	auto edgeBody = PhysicsBody::createEdgeBox( Size(visibleSize.width * 40 ,visibleSize.height / 1.2), PhysicsMaterial(0.0f,0.0f,1.0f) );
     
     auto edgeNode = Node::create();
     edgeNode ->setPosition( Point( visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y ) );
@@ -38,10 +38,16 @@ bool Juego::init()
     
 		this->addChild( background );
 
-		//Pruebas de puerta:
-		puerta = new Puerta();
-		puerta->setPosition( Point( visibleSize.width / 5 + origin.x -1000 , visibleSize.height / 4 + origin.y) );
-		this->addChild(puerta);
+		//Pruebas de puerta1:
+		puerta1 = new Puerta();
+		puerta1->setPosition( Point( visibleSize.width / 5 + origin.x -1000 , visibleSize.height / 4 + origin.y) );
+		this->addChild(puerta1);
+		//
+
+		//Pruebas de puerta2:
+		puerta2 = new Puerta();
+		puerta2->setPosition( Point( visibleSize.width / 5 + origin.x +3000 , visibleSize.height / 4 + origin.y) );
+		this->addChild(puerta2);
 		//
 
 		personaje = new Personaje;
@@ -307,11 +313,17 @@ void Juego::update(float delta) {
 		personaje->setPosition(Vec2(personaje->getPositionX(), plataforma->getPositionY()*1.6));
 	}*/
 
-	if(personaje->getPosition() > Vec2(puerta->getPositionX() -100 ,puerta->getPositionY() -100) && personaje->getPosition() < Vec2(puerta->getPositionX() + 100 ,puerta->getPositionY() +100)){
-		puerta->personajeEnLaPuerta(true);
+	if(personaje->getPosition() > Vec2(puerta1->getPositionX() -100 ,puerta1->getPositionY() -100) && personaje->getPosition() < Vec2(puerta1->getPositionX() + 100 ,puerta1->getPositionY() +100)){
+		puerta1->personajeEnLaPuerta(true);
 	}else{
-		puerta->personajeEnLaPuerta(false);
+		puerta1->personajeEnLaPuerta(false);
 	}
+	if(personaje->getPosition() > Vec2(puerta2->getPositionX() -100 ,puerta2->getPositionY() -100) && personaje->getPosition() < Vec2(puerta2->getPositionX() + 100 ,puerta2->getPositionY() +100)){
+		puerta2->personajeEnLaPuerta(true);
+	}else{
+		puerta2->personajeEnLaPuerta(false);
+	}
+
 	//Mina va con el personaje:
 	if(!personaje->isMina()){
 		if(personaje->getOrientacion()== 2){
@@ -359,10 +371,22 @@ void Juego::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 			//FALTA:
 			//crear el puente
 			//Y creo que ya.
-		}else if(puerta->isPersoanje()){
+		}else if(puerta1->isPersoanje()){
 			label->setString("abierta");
-			accionSalto = JumpBy::create(2,Point(0, puerta->getPositionY()), 50, 1);//Para mover la puerta desde aquí?Si
-			puerta->runAction(accionSalto);
+			accionSalto = JumpBy::create(2,Point(0, puerta1->getPositionY()), 50, 1);//Para mover la puerta desde aquí?Si
+			puerta1->runAction(accionSalto);
+			personaje->setPosition(Vec2(13355,200));
+			personaje->personajeAnim(1);
+			/*pause();
+			resume();*/
+			
+			//Aqui va la animación de abrir puerta.
+		}else if(puerta2->isPersoanje()){
+			label->setString("abierta");
+			accionSalto = JumpBy::create(2,Point(0, puerta2->getPositionY()), 50, 1);//Para mover la puerta desde aquí?Si
+			puerta2->runAction(accionSalto);
+			personaje->setPosition(Vec2(14555,350));
+			personaje->personajeAnim(1);
 			//Aqui va la animación de abrir puerta.
 		}
 		break;
