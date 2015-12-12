@@ -53,6 +53,8 @@ private:
         std::chrono::high_resolution_clock::time_point> keys;
 
 	 bool explosionMina;
+	 double pos_escenario_x = 10500;
+	 double pos_escenario_y = 2000;
 	 void lanzarMina(int);
 	 void eliminarMina();
 	 void contador(float);

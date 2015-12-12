@@ -34,7 +34,7 @@ bool Juego::init()
 	this->addChild( edgeNode );
 		{
 		background = Sprite::create( "Escenario1.png" );
-		background->setPosition( Point( 10250, 2000) );//Busacar sin numeros magicos
+		background->setPosition( Point( pos_escenario_x, pos_escenario_y) );//Buscar sin numeros magicos
     
 		this->addChild( background );
 
@@ -139,7 +139,8 @@ bool Juego::init()
 
 	//auto contactListener2 = EventListenerPhysicsContact::create();
 	//this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
-
+
+
 	//
 	
 	//Teclado Mantener pulsado:
@@ -251,7 +252,8 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 		interruptor->setEsActivo(false);//Pasar al update haber si se soluciona.
 	}
 	return true;
-}void Juego::onContactSeparate(PhysicsContact &contact){
+}
+void Juego::onContactSeparate(PhysicsContact &contact){
 	PhysicsBody *a = contact.getShapeA()->getBody();
 	PhysicsBody *b = contact.getShapeB()->getBody();
 
