@@ -21,15 +21,17 @@ public:
 
 	cocos2d::Label *label;
 
+	void MenuInicio::goToJuego(Ref *pSender);
+
 	CREATE_FUNC(MenuInicio);
 
-	void MenuInicio::goToJuego(Ref *pSender);
+	
 
 private:
 	static std::map<cocos2d::EventKeyboard::KeyCode,
 		std::chrono::high_resolution_clock::time_point> keys;
 
-	double pos_menu_x = 1000;
-	double pos_menu_y = 1000;
+	double pos_menu_x;
+	double pos_menu_y;
 };
 #endif

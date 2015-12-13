@@ -34,7 +34,7 @@ bool Juego::init()
 	this->addChild( edgeNode );
 		{
 		background = Sprite::create( "Escenario1.png" );
-		background->setPosition( Point( pos_escenario_x, pos_escenario_y) );//Buscar sin numeros magicos
+		background->setPosition( Point( 10250, 2000) );//Busacar sin numeros magicos
     
 		this->addChild( background );
 
@@ -48,6 +48,12 @@ bool Juego::init()
 		puerta2 = new Puerta();
 		puerta2->setPosition( Point( visibleSize.width / 5 + origin.x +3000 , visibleSize.height / 4 + origin.y) );
 		this->addChild(puerta2);
+		//
+
+		//Pruebas laser:
+		laser1 = new laser();
+		laser1->setPosition( Point( visibleSize.width / 5 + origin.x +1500 , visibleSize.height / 4 + origin.y));
+		this->addChild(laser1);
 		//
 
 		personaje = new Personaje;
@@ -139,8 +145,7 @@ bool Juego::init()
 
 	//auto contactListener2 = EventListenerPhysicsContact::create();
 	//this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
-
-
+
 	//
 	
 	//Teclado Mantener pulsado:
@@ -175,10 +180,19 @@ bool Juego::init()
 	//Para llamar al timer:
 
 		this->schedule(schedule_selector(Juego::contador), 1.0f);
+		this->schedule(schedule_selector(Juego::contadorLasers), 1.0f);
 
 
 	return true;
 
+}
+
+void Juego::contadorLasers(float delta){
+	if(laser1->isActive()){
+		laser1->setActive(false);
+	}else{
+		laser1->setActive(true);
+	}
 }
 
 void Juego::setPhysicsWorld(PhysicsWorld *world) {
@@ -252,8 +266,7 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 		interruptor->setEsActivo(false);//Pasar al update haber si se soluciona.
 	}
 	return true;
-}
-void Juego::onContactSeparate(PhysicsContact &contact){
+}void Juego::onContactSeparate(PhysicsContact &contact){
 	PhysicsBody *a = contact.getShapeA()->getBody();
 	PhysicsBody *b = contact.getShapeB()->getBody();
 

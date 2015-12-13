@@ -53,18 +53,18 @@ private:
         std::chrono::high_resolution_clock::time_point> keys;
 
 	 bool explosionMina;
-	 double pos_escenario_x = 10500;
-	 double pos_escenario_y = 2000;
 	 void lanzarMina(int);
 	 void eliminarMina();
 	 void contador(float);
 	 void saltar(float);
+	 void contadorLasers(float);//Cuando vuelva hay que hacer el contador para todos los lasers.
 	 llaves* llave1;
 	 llaves* llave2;
 	 Plataforma* plataforma;
 	 Interruptor* interruptor;
 	 Puerta* puerta1;
 	 Puerta* puerta2;
+	 laser* laser1;
 
 	 void centerViewport(void);
 	 

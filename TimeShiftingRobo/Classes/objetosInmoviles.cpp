@@ -105,19 +105,33 @@ public:
 	bool isPersoanje(){
 		return personajeEnPuerta;
 	}
+};
 
+class laser : public ObjetosInmoviles{
+private:
+	bool activo;
+public:
+	cocos2d::Sprite *laserSprite;
+	laser(){
+		laserSprite = Sprite::create("Laser_Apagado.png");
+		this->addChild(laserSprite);
+	}
+	void setActive(bool activar){
+		this->activo = activar; 
+		activarLaser(this->activo);
+	}
+
+	bool isActive(){
+		return activo;
+	}
+
+	void activarLaser(bool isActive){
+		if(isActive){
+			laserSprite->setTexture("Laser_Normal_2.png");
+		}else{
+			laserSprite->setTexture("Laser_Apagado.png");
+		}
+	}
 
 
 };
-
-/*  ejemplos clases que implementan custom interfaces xD
-class ClassA : public Interface{  
-    public:  
-        int method(int param) const{return param+1;};  
-};  
-  
-class ClassB : public Interface{  
-    public:  
-        int method(int param) const{return param+2;};  
-};  
-*/
