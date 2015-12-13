@@ -16,12 +16,14 @@ public:
 	cocos2d::Sprite *llave;
 
 	llaves(int numero){
-		llave = Sprite::create("E_BipedoDer.png");//Sustituir por el dibujo de llave
+		//Sustituir por el dibujo de llave
 		recogida = false;
 		if(numero == 1){
+			llave = Sprite::create("Llave_Azul.png");
 			//posicionX = ;
 			//posicionY = ;
 		}else{
+			llave = Sprite::create("Llave_Roja.png");
 			//posicionX = ;
 			//posicionY = ;
 		}

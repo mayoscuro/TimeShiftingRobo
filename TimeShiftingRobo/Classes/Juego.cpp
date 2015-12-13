@@ -40,30 +40,30 @@ bool Juego::init()
 
 		//Pruebas de puerta1:
 		puerta1 = new Puerta();
-		puerta1->setPosition( Point( visibleSize.width / 5 + origin.x -1000 , visibleSize.height / 4 + origin.y) );
+		puerta1->setPosition( Point( visibleSize.width / 5 + origin.x + 3850 , visibleSize.height / 4 + origin.y + 2820) );
 		this->addChild(puerta1);
 		//
 
 		//Pruebas de puerta2:
 		puerta2 = new Puerta();
-		puerta2->setPosition( Point( visibleSize.width / 5 + origin.x +3000 , visibleSize.height / 4 + origin.y) );
+		puerta2->setPosition( Point( visibleSize.width / 5 + origin.x + 3475 , visibleSize.height / 4 + origin.y + 2820) );
 		this->addChild(puerta2);
 		//
 
 		//Pruebas laser:
 		laser1 = new laser();
-		laser1->setPosition( Point( visibleSize.width / 5 + origin.x +1500 , visibleSize.height / 4 + origin.y));
+		laser1->setPosition(Point(visibleSize.width / 5 + origin.x + 4850 , visibleSize.height / 4 + origin.y + 1119));
 		this->addChild(laser1);
 		//
 
 		personaje = new Personaje;
 		personaje->setPosition( Point( visibleSize.width / 5 + origin.x, visibleSize.height / 4 + origin.y) );
-		auto personajeBody = PhysicsBody::createBox(personaje->personajeSprite->getContentSize(),PhysicsMaterial(0.0f,0.0f,1.0f));
+		/*auto personajeBody = PhysicsBody::createBox(personaje->personajeSprite->getContentSize(),PhysicsMaterial(0.0f,0.0f,1.0f));
 		personajeBody->setCollisionBitmask(1);
 		personajeBody->setDynamic(true);
 		personajeBody->setRotationEnable(false);
 		personajeBody->setContactTestBitmask(true);
-		personaje->setPhysicsBody( personajeBody );
+		personaje->setPhysicsBody( personajeBody );*/
 		personaje->setPosition( Point( visibleSize.width / 5 + origin.x, visibleSize.height / 4 + origin.y) );
 		this->addChild( personaje );
 		
@@ -88,8 +88,9 @@ bool Juego::init()
 		//Prueba visualización de llaves:
 
 		llave1 = new llaves(1);
-		llave1->setPosition( Point( visibleSize.width / 5 + origin.x +1000, visibleSize.height / 4 + origin.y) );
-		auto llave1Body = PhysicsBody::createBox(llave1->llave->getContentSize(),PhysicsMaterial(0,0,0));
+		llave1->setPosition( Point( visibleSize.width / 5 + origin.x + 19900, visibleSize.height / 4 + origin.y + 500));
+		//llave1->setScale(llave1->getScale() / 2);
+		auto llave1Body = PhysicsBody::createCircle(llave1->llave->getContentSize().height / 4,PhysicsMaterial(0,0,0));
 		llave1Body->setCollisionBitmask(11);
 		llave1Body->setContactTestBitmask(true);
 		llave1Body->setDynamic(false);
@@ -97,8 +98,9 @@ bool Juego::init()
 		this->addChild( llave1 );
 		
 		llave2 = new llaves(2);
-		llave2->setPosition( Point( visibleSize.width / 5 + origin.x +2000, visibleSize.height / 4 + origin.y) );
-		auto llave2Body = PhysicsBody::createBox(llave2->llave->getContentSize(),PhysicsMaterial(0,0,0));
+		llave2->setPosition( Point( visibleSize.width / 5 + origin.x + 10200, visibleSize.height / 4 + origin.y + 1000));
+		//llave2->setScale(llave2->getScale() / 2);
+		auto llave2Body = PhysicsBody::createCircle(llave2->llave->getContentSize().height / 4,PhysicsMaterial(0,0,0));
 		llave2Body->setCollisionBitmask(10);
 		llave2Body->setContactTestBitmask(true);
 		llave2Body->setDynamic(false);
@@ -108,7 +110,7 @@ bool Juego::init()
 
 		//Aquí va a ir el tema plataformas:
 		plataforma = new Plataforma();
-		plataforma->setPosition( Point( visibleSize.width / 5 + origin.x + 100 , visibleSize.height / 3 + origin.y) );
+		plataforma->setPosition(Point( visibleSize.width / 5 + origin.x + 3750 , visibleSize.height / 3 + origin.y + 100));
 		auto plataformaBody = PhysicsBody::createBox(plataforma->plataforma->getContentSize()/ 5,PhysicsMaterial(0.0f,0.0f,1.0f));
 		plataformaBody->setCollisionBitmask(7);
 		plataformaBody->setContactTestBitmask(true);
@@ -120,7 +122,7 @@ bool Juego::init()
 
 		//Aquí las pruebas del interruptor:
 		interruptor = new Interruptor();
-		interruptor->setPosition( Point( visibleSize.width / 5 + origin.x - 250 , visibleSize.height / 4 + origin.y) );
+		interruptor->setPosition( Point( visibleSize.width / 5 + origin.x + 6505 , visibleSize.height / 4 + origin.y + 3000));
 		auto interruptorBody = PhysicsBody::createBox(interruptor->interruptor->getContentSize(),PhysicsMaterial(0,0,0));
 		interruptorBody->setCollisionBitmask(12);
 		interruptorBody->setContactTestBitmask(true);
@@ -145,7 +147,8 @@ bool Juego::init()
 
 	//auto contactListener2 = EventListenerPhysicsContact::create();
 	//this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
-
+
+
 	//
 	
 	//Teclado Mantener pulsado:
@@ -266,7 +269,8 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 		interruptor->setEsActivo(false);//Pasar al update haber si se soluciona.
 	}
 	return true;
-}void Juego::onContactSeparate(PhysicsContact &contact){
+}
+void Juego::onContactSeparate(PhysicsContact &contact){
 	PhysicsBody *a = contact.getShapeA()->getBody();
 	PhysicsBody *b = contact.getShapeB()->getBody();
 
@@ -296,14 +300,14 @@ bool Juego::isKeyPressed(EventKeyboard::KeyCode code) {
 }
 
 //Para el scroll de la pantalla
-void Juego::centerViewport()	{	
+void Juego::centerViewport(){	
 	if(personaje->getPositionX() > personaje->getPositionX()/4.0f ){//Esto funciona, pero...xD
 		CCSize	screenSize	=	CCDirector::sharedDirector()->getWinSize();	
 						
 		float x	= screenSize.width/2.0	- personaje->getPosition().x;	
 		float y	= screenSize.height/4.0	- personaje->getPosition().y;	
 						
-		this->setPosition(ccp(x,	y));
+		this->setPosition(ccp(x, y));
 	}
 }
 
@@ -376,6 +380,12 @@ void Juego::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 	case EventKeyboard::KeyCode::KEY_A:
 		personaje->setOrientacion(1);
 		break;*/
+	case EventKeyboard::KeyCode::KEY_R:
+		personaje->setPosition(Vec2(personaje->getPositionX(), personaje->getPositionY() + 50));
+		break;
+	case EventKeyboard::KeyCode::KEY_C:
+		personaje->setPosition(Vec2(personaje->getPositionX(), personaje->getPositionY() - 50));
+		break;
 	case EventKeyboard::KeyCode::KEY_W:
 		lanzarMina(2);//lanzarMina modo dejar caer.
 		break;
