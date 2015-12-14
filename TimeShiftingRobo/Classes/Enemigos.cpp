@@ -36,14 +36,28 @@ public:
 
 	void animEnemigo(int direccion){
 		if(direccion == 1){
-			enemigo->setTexture("E_BipedoDer.png");
+			enemigo->setFlippedX(false);
+			//enemigo->setTexture("E_BipedoDer.png");
 		}else{
-			enemigo->setTexture("E_Bipedo.png");
+			enemigo->setFlippedX(true);
+			//enemigo->setTexture("E_Bipedo.png");
 		}
 	}
 
 	void terrestres::ruta(){
-		
+		//Función del movimiento del enemigo 1 (Abría que hacer que funcionará para todos los enemigos(tal vez pasandola a la clase enemigos...))
+		if(pasosDer < 100 ){
+			this->setPosition(this->getPositionX() + 3, this->getPositionY());
+			this->pasosDer++;
+			this->animEnemigo(1);
+		}else if(pasosIzq > 0){
+			this->setPosition(this->getPositionX() - 3, this->getPositionY());
+			this->pasosIzq--;
+			this->animEnemigo(2);
+		}else{
+			pasosIzq = 100;
+			pasosDer = 0;
+	}
 
 	}
 };

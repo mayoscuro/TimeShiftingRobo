@@ -16,10 +16,12 @@ Personaje::Personaje(void)
 
 void Personaje::personajeAnim(int direccion){
 	if(direccion == 1){
-		personajeSprite->setTexture("RoboIzq.png");//Si dirección = 1 personaje mira a la izquierda.
+		//personajeSprite->setTexture("RoboIzq.png");//Si dirección = 1 personaje mira a la izquierda.
+		personajeSprite->setFlippedX(true);
 		orientacion = 1;
 	}else if(direccion == 2){
-		personajeSprite->setTexture("Robo.png");//Didirección = 2 personaje mira derecha.
+		//personajeSprite->setTexture("Robo.png");//Didirección = 2 personaje mira derecha.
+		personajeSprite->setFlippedX(false);
 		orientacion = 2;
 	}
 }

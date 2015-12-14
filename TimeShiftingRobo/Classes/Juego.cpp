@@ -7,7 +7,7 @@ Scene* Juego::createScene()
 {
 	auto scene = Scene::createWithPhysics();
     //auto scene = Scene::create();
-	scene->getPhysicsWorld()->setDebugDrawMask( PhysicsWorld::DEBUGDRAW_ALL );
+	/*scene->getPhysicsWorld()->setDebugDrawMask( PhysicsWorld::DEBUGDRAW_ALL );*/
     
     Juego* layer = Juego::create();
 	layer->setPhysicsWorld(scene->getPhysicsWorld());
@@ -25,13 +25,71 @@ bool Juego::init()
 
 	Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
-	auto edgeBody = PhysicsBody::createEdgeBox( Size(visibleSize.width * 40 ,visibleSize.height / 1.2), PhysicsMaterial(0.0f,0.0f,1.0f) );
+	//Puntos de colisión del suelo:
+	auto edgeBody = PhysicsBody::createEdgeBox( Size(visibleSize.width * 2.15 ,visibleSize.height / 1.1), PhysicsMaterial(0.0f,0.0f,1.0f) );
     
     auto edgeNode = Node::create();
-    edgeNode ->setPosition( Point( visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y ) );
+    edgeNode ->setPosition( Point( 660,-280) );
     edgeNode->setPhysicsBody( edgeBody );
 	this->addChild( edgeNode );
+
+	auto edgeBody1 = PhysicsBody::createEdgeBox( Size(1150 ,visibleSize.height / 1.1), PhysicsMaterial(0.0f,0.0f,1.0f) );
+    
+    auto edgeNode1 = Node::create();
+    edgeNode1 ->setPosition( Point( 3070,100) );
+    edgeNode1->setPhysicsBody( edgeBody1 );
+	this->addChild( edgeNode1 );
+
+	auto edgeBody2 = PhysicsBody::createEdgeBox( Size(5400,visibleSize.height / 1.1), PhysicsMaterial(0.0f,0.0f,1.0f) );
+    
+    auto edgeNode2 = Node::create();
+    edgeNode2 ->setPosition( Point( 7000,-280) );
+    edgeNode2->setPhysicsBody( edgeBody2 );
+	this->addChild( edgeNode2 );
+
+	auto edgeBody3 = PhysicsBody::createEdgeBox( Size(100,300), PhysicsMaterial(0.0f,0.0f,1.0f) );
+    
+    auto edgeNode3 = Node::create();
+    edgeNode3 ->setPosition( Point( 9635,250) );
+    edgeNode3->setPhysicsBody( edgeBody3 );
+	this->addChild( edgeNode3 );
+
+	auto edgeBody4 = PhysicsBody::createEdgeBox( Size(5400, 380), PhysicsMaterial(0.0f,0.0f,1.0f) );
+    
+    auto edgeNode4 = Node::create();
+    edgeNode4 ->setPosition( Point( 7000,630) );
+    edgeNode4->setPhysicsBody( edgeBody4 );
+	this->addChild( edgeNode4 );
+
+	auto edgeBody5 = PhysicsBody::createEdgeBox( Size(100, 1000), PhysicsMaterial(0.0f,0.0f,1.0f) );
+    
+    auto edgeNode5 = Node::create();
+    edgeNode5 ->setPosition( Point( 7545,1350) );
+    edgeNode5->setPhysicsBody( edgeBody5 );
+	this->addChild( edgeNode5 );
+
+	auto edgeBody6 = PhysicsBody::createEdgeBox( Size(10, 3000), PhysicsMaterial(0.0f,0.0f,1.0f) );
+    
+    auto edgeNode6 = Node::create();
+    edgeNode6 ->setPosition( Point( -600,0) );
+    edgeNode6->setPhysicsBody( edgeBody6 );
+	this->addChild( edgeNode6 );
+
+	auto edgeBody8 = PhysicsBody::createEdgeBox( Size(500000, 200), PhysicsMaterial(0.0f,0.0f,1.0f) );
+    
+    auto edgeNode8 = Node::create();
+    edgeNode8 ->setPosition( Point( -600,-500) );
+    edgeNode8->setPhysicsBody( edgeBody8 );
+	this->addChild( edgeNode8 );
+
+	/*auto edgeBody7 = PhysicsBody::createEdgeBox( Size(1000, 300), PhysicsMaterial(0.0f,0.0f,1.0f) );
+    
+    auto edgeNode7 = Node::create();
+    edgeNode7 ->setPosition( Point( 6045,1350) );
+    edgeNode7->setPhysicsBody( edgeBody7 );
+	this->addChild( edgeNode7 );*/
+
+	//Fin de puntos de colisión del suelo
 		{
 		background = Sprite::create( "Escenario1.png" );
 		background->setPosition( Point( 10250, 2000) );//Busacar sin numeros magicos
@@ -58,12 +116,12 @@ bool Juego::init()
 
 		personaje = new Personaje;
 		personaje->setPosition( Point( visibleSize.width / 5 + origin.x, visibleSize.height / 4 + origin.y) );
-		/*auto personajeBody = PhysicsBody::createBox(personaje->personajeSprite->getContentSize(),PhysicsMaterial(0.0f,0.0f,1.0f));
+		auto personajeBody = PhysicsBody::createBox(personaje->personajeSprite->getContentSize(),PhysicsMaterial(0.0f,0.0f,1.0f));
 		personajeBody->setCollisionBitmask(1);
 		personajeBody->setDynamic(true);
 		personajeBody->setRotationEnable(false);
 		personajeBody->setContactTestBitmask(true);
-		personaje->setPhysicsBody( personajeBody );*/
+		personaje->setPhysicsBody( personajeBody );
 		personaje->setPosition( Point( visibleSize.width / 5 + origin.x, visibleSize.height / 4 + origin.y) );
 		this->addChild( personaje );
 		
@@ -111,7 +169,7 @@ bool Juego::init()
 		//Aquí va a ir el tema plataformas:
 		plataforma = new Plataforma();
 		plataforma->setPosition(Point( visibleSize.width / 5 + origin.x + 3750 , visibleSize.height / 3 + origin.y + 100));
-		auto plataformaBody = PhysicsBody::createBox(plataforma->plataforma->getContentSize()/ 5,PhysicsMaterial(0.0f,0.0f,1.0f));
+		auto plataformaBody = PhysicsBody::createBox(Size(plataforma->plataforma->getContentSize().width/ 2, plataforma->plataforma->getContentSize().height),PhysicsMaterial(0.0f,0.0f,1.0f));
 		plataformaBody->setCollisionBitmask(7);
 		plataformaBody->setContactTestBitmask(true);
 		plataformaBody->setRotationEnable(false);
@@ -222,10 +280,10 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 			label->setString("Colisiona, personaje, mina");
 			eliminarMina();
 			if(personaje->getOrientacion() == 2){
-				accionSalto = JumpBy::create(2,Point(500, personaje->getPositionY()), 100, 1);//Para saltar??
+				accionSalto = JumpBy::create(4,Point(500, personaje->getPositionY()), 320, 1);//Para saltar??
 				personaje->runAction(accionSalto);
 			}else if(personaje->getOrientacion() == 1){
-				accionSalto = JumpBy::create(2,Point(-500, personaje->getPositionY()), 100, 1);
+				accionSalto = JumpBy::create(4,Point(-500, personaje->getPositionY()), 320, 1);
 				personaje->runAction(accionSalto);
 			}
 			
@@ -318,7 +376,8 @@ void Juego::update(float delta) {
 	Vec2 loc = personaje->getPosition();
 	Vec2 locEscenario = background->getPosition();
 	Vec2 locEnemigo = enemigo1->getPosition();
-	moverEnemigos(locEnemigo);
+	enemigo1->ruta();
+	//moverEnemigos(locEnemigo);
 	centerViewport();
 	if(isKeyPressed(EventKeyboard::KeyCode::KEY_A)) {
 		personaje->personajeAnim(1);//Para que el personaje mire a la izquierda.
@@ -381,10 +440,11 @@ void Juego::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 		personaje->setOrientacion(1);
 		break;*/
 	case EventKeyboard::KeyCode::KEY_R:
-		personaje->setPosition(Vec2(personaje->getPositionX(), personaje->getPositionY() + 50));
+		personaje->setPosition( Point( 100, 200) );
+		/*personaje->setPosition(Vec2(personaje->getPositionX(), personaje->getPositionY() + 100));*/
 		break;
 	case EventKeyboard::KeyCode::KEY_C:
-		personaje->setPosition(Vec2(personaje->getPositionX(), personaje->getPositionY() - 50));
+		/*personaje->setPosition(Vec2(personaje->getPositionX(), personaje->getPositionY() - 100));*/
 		break;
 	case EventKeyboard::KeyCode::KEY_W:
 		lanzarMina(2);//lanzarMina modo dejar caer.
@@ -464,18 +524,3 @@ void Juego::eliminarMina(){
 
 
 
-//Función del movimiento del enemigo 1 (Abría que hacer que funcionará para todos los enemigos(tal vez pasandola a la clase enemigos...))
-void Juego::moverEnemigos(Vec2 locEnemigo){
-	if(enemigo1->pasosDer < 100 ){
-		enemigo1->setPosition(locEnemigo.x + 3,locEnemigo.y);
-		enemigo1->pasosDer++;
-		enemigo1->animEnemigo(1);
-	}else if(enemigo1->pasosIzq > 0){
-		enemigo1->setPosition(locEnemigo.x - 3,locEnemigo.y);
-		enemigo1->pasosIzq--;
-		enemigo1->animEnemigo(2);
-	}else{
-		enemigo1->pasosIzq = 100;
-		enemigo1->pasosDer = 0;
-	}
-}
