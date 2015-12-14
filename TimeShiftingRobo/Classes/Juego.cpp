@@ -300,15 +300,15 @@ bool Juego::isKeyPressed(EventKeyboard::KeyCode code) {
 }
 
 //Para el scroll de la pantalla
-void Juego::centerViewport(){	
-	if(personaje->getPositionX() > personaje->getPositionX()/4.0f ){//Esto funciona, pero...xD
-		CCSize	screenSize	=	CCDirector::sharedDirector()->getWinSize();	
-						
-		float x	= screenSize.width/2.0	- personaje->getPosition().x;	
-		float y	= screenSize.height/4.0	- personaje->getPosition().y;	
-						
-		this->setPosition(ccp(x, y));
+void Juego::centerViewport()	{	
+	CCSize	screenSize	=	CCDirector::sharedDirector()->getWinSize();
+		float x =  screenSize.width/2.0;
+		float y = screenSize.height/4.0;
+	if(personaje->getPositionX() > personaje->getPositionX()/4.0f ){
+		x	= screenSize.width/2.0	- personaje->getPosition().x;
 	}
+		y	= screenSize.height/4.0	- personaje->getPosition().y;					
+	this->setPosition(ccp(x,	y));
 }
 
 void Juego::update(float delta) {
