@@ -28,10 +28,13 @@ public:
 	
 
 private:
-	static std::map<cocos2d::EventKeyboard::KeyCode,
-		std::chrono::high_resolution_clock::time_point> keys;
+	//static std::map<cocos2d::EventKeyboard::KeyCode,
+		//std::chrono::high_resolution_clock::time_point> keys;
 
 	double pos_menu_x;
 	double pos_menu_y;
+
+	double pos_boton_x;
+	double pos_boton_y;
 };
 #endif
