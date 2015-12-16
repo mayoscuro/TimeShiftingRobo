@@ -67,6 +67,17 @@ private:
 	 laser* laser1;
 
 	 void centerViewport(void);
+	 
+	 //Colisiones:
+	 private:
+		 //PhysicsJointFixed* jointPlataform;
+		PhysicsWorld *sceneWorld;
+		/*PhysicsBody  *body;
+		PhysicsBody  *body2;*/
+	public:
+		void setPhysicsWorld(PhysicsWorld *world);
+		bool onContactBegin(PhysicsContact &contact);
+		void onContactSeparate(PhysicsContact &contact);
 	//
 };
 

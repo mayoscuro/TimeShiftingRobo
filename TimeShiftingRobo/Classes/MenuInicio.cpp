@@ -56,6 +56,6 @@ void MenuInicio::goToJuego(Ref * pSender)
 {
 	auto scene = Juego::createScene();
 	//Director::getInstance()->replaceScene(TransitionFade::create(0.5,scene));
-	Director::getInstance()->replaceScene(scene);
+	Director::getInstance()->replaceScene(scene);º
 }
 ;
