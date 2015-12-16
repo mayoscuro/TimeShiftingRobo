@@ -5,12 +5,12 @@ USING_NS_CC;
 //Cosas de colisiones buscar contactManager
 Scene* Juego::createScene()
 {
-	auto scene = Scene::createWithPhysics();
+	auto scene = Scene::create();
     //auto scene = Scene::create();
-	/*scene->getPhysicsWorld()->setDebugDrawMask( PhysicsWorld::DEBUGDRAW_ALL );*/
+	//scene->getPhysicsWorld()->setDebugDrawMask( PhysicsWorld::DEBUGDRAW_ALL );
     
     Juego* layer = Juego::create();
-	layer->setPhysicsWorld(scene->getPhysicsWorld());
+	//layer->setPhysicsWorld(scene->getPhysicsWorld());
 	
     scene->addChild(layer);
     return scene;
@@ -26,60 +26,60 @@ bool Juego::init()
 	Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	//Puntos de colisión del suelo:
-	auto edgeBody = PhysicsBody::createEdgeBox( Size(visibleSize.width * 2.15 ,visibleSize.height / 1.1), PhysicsMaterial(0.0f,0.0f,1.0f) );
+	//auto edgeBody = PhysicsBody::createEdgeBox( Size(visibleSize.width * 2.15 ,visibleSize.height / 1.1), PhysicsMaterial(0.0f,0.0f,1.0f) );
     
     auto edgeNode = Node::create();
     edgeNode ->setPosition( Point( 660,-280) );
-    edgeNode->setPhysicsBody( edgeBody );
+    //edgeNode->setPhysicsBody( edgeBody );
 	this->addChild( edgeNode );
 
-	auto edgeBody1 = PhysicsBody::createEdgeBox( Size(1150 ,visibleSize.height / 1.1), PhysicsMaterial(0.0f,0.0f,1.0f) );
+	//auto edgeBody1 = PhysicsBody::createEdgeBox( Size(1150 ,visibleSize.height / 1.1), PhysicsMaterial(0.0f,0.0f,1.0f) );
     
     auto edgeNode1 = Node::create();
     edgeNode1 ->setPosition( Point( 3070,100) );
-    edgeNode1->setPhysicsBody( edgeBody1 );
+    //edgeNode1->setPhysicsBody( edgeBody1 );
 	this->addChild( edgeNode1 );
 
-	auto edgeBody2 = PhysicsBody::createEdgeBox( Size(5400,visibleSize.height / 1.1), PhysicsMaterial(0.0f,0.0f,1.0f) );
+	//auto edgeBody2 = PhysicsBody::createEdgeBox( Size(5400,visibleSize.height / 1.1), PhysicsMaterial(0.0f,0.0f,1.0f) );
     
     auto edgeNode2 = Node::create();
     edgeNode2 ->setPosition( Point( 7000,-280) );
-    edgeNode2->setPhysicsBody( edgeBody2 );
+    //edgeNode2->setPhysicsBody( edgeBody2 );
 	this->addChild( edgeNode2 );
 
-	auto edgeBody3 = PhysicsBody::createEdgeBox( Size(100,300), PhysicsMaterial(0.0f,0.0f,1.0f) );
+	//auto edgeBody3 = PhysicsBody::createEdgeBox( Size(100,300), PhysicsMaterial(0.0f,0.0f,1.0f) );
     
     auto edgeNode3 = Node::create();
     edgeNode3 ->setPosition( Point( 9635,250) );
-    edgeNode3->setPhysicsBody( edgeBody3 );
+    //edgeNode3->setPhysicsBody( edgeBody3 );
 	this->addChild( edgeNode3 );
 
-	auto edgeBody4 = PhysicsBody::createEdgeBox( Size(5400, 380), PhysicsMaterial(0.0f,0.0f,1.0f) );
+	//auto edgeBody4 = PhysicsBody::createEdgeBox( Size(5400, 380), PhysicsMaterial(0.0f,0.0f,1.0f) );
     
     auto edgeNode4 = Node::create();
     edgeNode4 ->setPosition( Point( 7000,630) );
-    edgeNode4->setPhysicsBody( edgeBody4 );
+    //edgeNode4->setPhysicsBody( edgeBody4 );
 	this->addChild( edgeNode4 );
 
-	auto edgeBody5 = PhysicsBody::createEdgeBox( Size(100, 1000), PhysicsMaterial(0.0f,0.0f,1.0f) );
+	//auto edgeBody5 = PhysicsBody::createEdgeBox( Size(100, 1000), PhysicsMaterial(0.0f,0.0f,1.0f) );
     
     auto edgeNode5 = Node::create();
     edgeNode5 ->setPosition( Point( 7545,1350) );
-    edgeNode5->setPhysicsBody( edgeBody5 );
+    //edgeNode5->setPhysicsBody( edgeBody5 );
 	this->addChild( edgeNode5 );
 
-	auto edgeBody6 = PhysicsBody::createEdgeBox( Size(10, 3000), PhysicsMaterial(0.0f,0.0f,1.0f) );
+	//auto edgeBody6 = PhysicsBody::createEdgeBox( Size(10, 3000), PhysicsMaterial(0.0f,0.0f,1.0f) );
     
     auto edgeNode6 = Node::create();
     edgeNode6 ->setPosition( Point( -600,0) );
-    edgeNode6->setPhysicsBody( edgeBody6 );
+    //edgeNode6->setPhysicsBody( edgeBody6 );
 	this->addChild( edgeNode6 );
 
-	auto edgeBody8 = PhysicsBody::createEdgeBox( Size(500000, 200), PhysicsMaterial(0.0f,0.0f,1.0f) );
+	//auto edgeBody8 = PhysicsBody::createEdgeBox( Size(500000, 200), PhysicsMaterial(0.0f,0.0f,1.0f) );
     
     auto edgeNode8 = Node::create();
     edgeNode8 ->setPosition( Point( -600,-500) );
-    edgeNode8->setPhysicsBody( edgeBody8 );
+    //edgeNode8->setPhysicsBody( edgeBody8 );
 	this->addChild( edgeNode8 );
 
 	/*auto edgeBody7 = PhysicsBody::createEdgeBox( Size(1000, 300), PhysicsMaterial(0.0f,0.0f,1.0f) );
@@ -116,12 +116,12 @@ bool Juego::init()
 
 		personaje = new Personaje;
 		personaje->setPosition( Point( visibleSize.width / 5 + origin.x, visibleSize.height / 4 + origin.y) );
-		auto personajeBody = PhysicsBody::createBox(personaje->personajeSprite->getContentSize(),PhysicsMaterial(0.0f,0.0f,1.0f));
+		/*auto personajeBody = PhysicsBody::createBox(personaje->personajeSprite->getContentSize(),PhysicsMaterial(0.0f,0.0f,1.0f));
 		personajeBody->setCollisionBitmask(1);
 		personajeBody->setDynamic(true);
 		personajeBody->setRotationEnable(false);
 		personajeBody->setContactTestBitmask(true);
-		personaje->setPhysicsBody( personajeBody );
+		personaje->setPhysicsBody( personajeBody );*/
 		personaje->setPosition( Point( visibleSize.width / 5 + origin.x, visibleSize.height / 4 + origin.y) );
 		this->addChild( personaje );
 		
@@ -134,12 +134,12 @@ bool Juego::init()
 		this->addChild( enemigo1 , 1 );
 		enemigo2 = new terrestres(2);
 		enemigo2->setPosition( Point( visibleSize.width / 5 + origin.x +1300, visibleSize.height / 6.5 + origin.y) );
-		auto enemigo2Body = PhysicsBody::createBox(enemigo2->enemigo->getContentSize(),PhysicsMaterial(0,0,0));
+		/*auto enemigo2Body = PhysicsBody::createBox(enemigo2->enemigo->getContentSize(),PhysicsMaterial(0,0,0));
 		enemigo2Body->setCollisionBitmask(2);
 		enemigo2Body->setContactTestBitmask(true);
 		enemigo2Body->setRotationEnable(false);
 		enemigo2Body->setDynamic(false);
-		enemigo2->setPhysicsBody( enemigo2Body );
+		enemigo2->setPhysicsBody( enemigo2Body );*/
 		this->addChild( enemigo2);
 	//Fin Prueba
 
@@ -148,45 +148,45 @@ bool Juego::init()
 		llave1 = new llaves(1);
 		llave1->setPosition( Point( visibleSize.width / 5 + origin.x + 19900, visibleSize.height / 4 + origin.y + 500));
 		//llave1->setScale(llave1->getScale() / 2);
-		auto llave1Body = PhysicsBody::createCircle(llave1->llave->getContentSize().height / 4,PhysicsMaterial(0,0,0));
+		/*auto llave1Body = PhysicsBody::createCircle(llave1->llave->getContentSize().height / 4,PhysicsMaterial(0,0,0));
 		llave1Body->setCollisionBitmask(11);
 		llave1Body->setContactTestBitmask(true);
 		llave1Body->setDynamic(false);
-		llave1->setPhysicsBody( llave1Body );
+		llave1->setPhysicsBody( llave1Body );*/
 		this->addChild( llave1 );
 		
 		llave2 = new llaves(2);
 		llave2->setPosition( Point( visibleSize.width / 5 + origin.x + 10200, visibleSize.height / 4 + origin.y + 1000));
 		//llave2->setScale(llave2->getScale() / 2);
-		auto llave2Body = PhysicsBody::createCircle(llave2->llave->getContentSize().height / 4,PhysicsMaterial(0,0,0));
+		/*auto llave2Body = PhysicsBody::createCircle(llave2->llave->getContentSize().height / 4,PhysicsMaterial(0,0,0));
 		llave2Body->setCollisionBitmask(10);
 		llave2Body->setContactTestBitmask(true);
 		llave2Body->setDynamic(false);
-		llave2->setPhysicsBody( llave2Body );
+		llave2->setPhysicsBody( llave2Body );*/
 		this->addChild( llave2 );
 		//Fin llaves
 
 		//Aquí va a ir el tema plataformas:
 		plataforma = new Plataforma();
 		plataforma->setPosition(Point( visibleSize.width / 5 + origin.x + 3750 , visibleSize.height / 3 + origin.y + 100));
-		auto plataformaBody = PhysicsBody::createBox(Size(plataforma->plataforma->getContentSize().width/ 2, plataforma->plataforma->getContentSize().height),PhysicsMaterial(0.0f,0.0f,1.0f));
+		/*auto plataformaBody = PhysicsBody::createBox(Size(plataforma->plataforma->getContentSize().width/ 2, plataforma->plataforma->getContentSize().height),PhysicsMaterial(0.0f,0.0f,1.0f));
 		plataformaBody->setCollisionBitmask(7);
 		plataformaBody->setContactTestBitmask(true);
 		plataformaBody->setRotationEnable(false);
 		plataformaBody->setDynamic(false);
-		plataforma->setPhysicsBody( plataformaBody );
+		plataforma->setPhysicsBody( plataformaBody );*/
 		this->addChild(plataforma);
 		//Fin Plataformas.
 
 		//Aquí las pruebas del interruptor:
 		interruptor = new Interruptor();
 		interruptor->setPosition( Point( visibleSize.width / 5 + origin.x + 6505 , visibleSize.height / 4 + origin.y + 3000));
-		auto interruptorBody = PhysicsBody::createBox(interruptor->interruptor->getContentSize(),PhysicsMaterial(0,0,0));
+		/*auto interruptorBody = PhysicsBody::createBox(interruptor->interruptor->getContentSize(),PhysicsMaterial(0,0,0));
 		interruptorBody->setCollisionBitmask(12);
 		interruptorBody->setContactTestBitmask(true);
 		interruptorBody->setRotationEnable(false);
 		interruptorBody->setDynamic(false);
-		interruptor->setPhysicsBody( interruptorBody );
+		interruptor->setPhysicsBody( interruptorBody );*/
 		this->addChild(interruptor);
 		//Fin de pruebas del interruptor
 
@@ -198,10 +198,10 @@ bool Juego::init()
 
 	}
 	//Colisiones:
-	auto contactListener = EventListenerPhysicsContact::create();
+	/*auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(Juego::onContactBegin, this);
 	contactListener->onContactSeparate = CC_CALLBACK_1(Juego::onContactSeparate, this);
-	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);*/
 
 	//auto contactListener2 = EventListenerPhysicsContact::create();
 	//this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
@@ -234,6 +234,7 @@ bool Juego::init()
 	label->setPosition( Point( visibleSize.width / 5 + origin.x, visibleSize.height / 4 + origin.y) );
 	label->setColor(Color3B(255,0,0));
 	this->addChild(label);
+	label->setVisible(false);
 
     // Hacemos saber a cocos que tenemos una función update
     this->scheduleUpdate();
@@ -255,13 +256,7 @@ void Juego::contadorLasers(float delta){
 		laser1->setActive(true);
 	}
 }
-
-void Juego::setPhysicsWorld(PhysicsWorld *world) {
-	sceneWorld = world;
-	//sceneWorld->
-	sceneWorld->setGravity(Vec2(0,-98.0f));
-}
-
+/*
 bool Juego::onContactBegin(PhysicsContact &contact){
 	PhysicsBody *a = contact.getShapeA()->getBody();
 	PhysicsBody *b = contact.getShapeB()->getBody();
@@ -280,10 +275,10 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 			label->setString("Colisiona, personaje, mina");
 			eliminarMina();
 			if(personaje->getOrientacion() == 2){
-				accionSalto = JumpBy::create(4,Point(500, personaje->getPositionY()), 320, 1);//Para saltar??
+				accionSalto = JumpBy::create(4,Point(600, personaje->getPositionY()), 320, 1);//Para saltar??
 				personaje->runAction(accionSalto);
 			}else if(personaje->getOrientacion() == 1){
-				accionSalto = JumpBy::create(4,Point(-500, personaje->getPositionY()), 320, 1);
+				accionSalto = JumpBy::create(4,Point(-600, personaje->getPositionY()), 320, 1);
 				personaje->runAction(accionSalto);
 			}
 			
@@ -300,7 +295,7 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 	
 	if(1 == a->getCollisionBitmask() && 2 == b->getCollisionBitmask() ||
 		2 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask()){
-		/*personaje->removeFromPhysicsWorld();*/
+		/*personaje->removeFromPhysicsWorld();
 		//personaje->removeAllChildrenWithCleanup(true);	
 		//label->setString("Colisiona, con enemigo");
 	}
@@ -328,6 +323,8 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 	}
 	return true;
 }
+*/
+/*
 void Juego::onContactSeparate(PhysicsContact &contact){
 	PhysicsBody *a = contact.getShapeA()->getBody();
 	PhysicsBody *b = contact.getShapeB()->getBody();
@@ -340,7 +337,7 @@ void Juego::onContactSeparate(PhysicsContact &contact){
 
 }
 //
-
+*/
  
 void Juego::contador(float delta){
 	if(personaje->isMina()){
@@ -410,9 +407,19 @@ void Juego::update(float delta) {
 			mina->setPosition(Vec2(personaje->getPositionX() - 130, personaje->getPositionY()));
 		}
 	}
+	//Colisión personaje/Mina:
+	if(/*mina->isVisible() &&*/ personaje->getPosition() > Vec2(mina->getPositionX() -50 ,mina->getPositionY() -50) && personaje->getPosition() < Vec2(mina->getPositionX() + 50 ,mina->getPositionY() +50)){
+		if(personaje->getOrientacion() == 2){
+			accionSalto = JumpBy::create(2,Point(10, 0), 5, 1);//Para saltar??
+			personaje->runAction(accionSalto);
+		}else if(personaje->getOrientacion() == 1){
+			accionSalto = JumpBy::create(2,Point(-10, 0), 5, 1);
+			personaje->runAction(accionSalto);
+		}
+		eliminarMina();
+	}
 	//Abrir la puerta si:
 	/*if(llave1->esRecigida() && !llave2->esRecigida() ){
-
 	}else if(llave2->esRecigida() && !llave1->esRecigida()){
 	
 	}else*/ if(llave1->esRecigida() && llave2->esRecigida()){
@@ -440,11 +447,11 @@ void Juego::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 		personaje->setOrientacion(1);
 		break;*/
 	case EventKeyboard::KeyCode::KEY_R:
-		personaje->setPosition( Point( 100, 200) );
-		/*personaje->setPosition(Vec2(personaje->getPositionX(), personaje->getPositionY() + 100));*/
+		//personaje->setPosition( Point( 100, 200) );
+		personaje->setPosition(Vec2(personaje->getPositionX(), personaje->getPositionY() + 30));
 		break;
 	case EventKeyboard::KeyCode::KEY_C:
-		/*personaje->setPosition(Vec2(personaje->getPositionX(), personaje->getPositionY() - 100));*/
+		personaje->setPosition(Vec2(personaje->getPositionX(), personaje->getPositionY() - 30));
 		break;
 	case EventKeyboard::KeyCode::KEY_W:
 		lanzarMina(2);//lanzarMina modo dejar caer.
@@ -452,7 +459,7 @@ void Juego::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 	case EventKeyboard::KeyCode::KEY_SPACE://Boton de acción
 		if(interruptor->getEsActivo()){
 			label->setString("Puente abierto");
-			interruptor->removeFromPhysicsWorld();//Eliminar las fisica del interruptor, para que no pueda activar 10000000 puentes
+			//interruptor->removeFromPhysicsWorld();//Eliminar las fisica del interruptor, para que no pueda activar 10000000 puentes
 			//FALTA:
 			//crear el puente
 			//Y creo que ya.
@@ -484,24 +491,26 @@ void Juego::lanzarMina(int tipo){
 		personaje->setIsMina(true);
 		if(personaje->getOrientacion()==2){	
 			if(tipo == 1){
-				lanzamientoDeMina = JumpBy::create(1,Point(300, 0), 40, 1);//Para saltar??
+				lanzamientoDeMina = JumpBy::create(1,Point(300, -100), 40, 1);//Para saltar??
 				mina->runAction(lanzamientoDeMina);
 			}else{
-				mina->setPosition(personaje->getPosition());
+				lanzamientoDeMina = JumpBy::create(1,Point(0, -100), 40, 1);//Para saltar??
+				mina->runAction(lanzamientoDeMina);
 			}
 		}else{
 			if(tipo == 1){
-				lanzamientoDeMina = JumpBy::create(1,Point(-300, 0), 40, 1);//Para saltar??
+				lanzamientoDeMina = JumpBy::create(1,Point(-300, -100), 40, 1);//Para saltar??
 				mina->runAction(lanzamientoDeMina);
 			}else{
-				mina->setPosition(personaje->getPosition());
+				lanzamientoDeMina = JumpBy::create(1,Point(0, -100), 40, 1);//Para saltar??
+				mina->runAction(lanzamientoDeMina);
 			}
 		}
-		auto minaBody = PhysicsBody::createBox(mina->mina->getContentSize()/15,PhysicsMaterial(0.0f,0.0f,1.0f));
+		/*auto minaBody = PhysicsBody::createBox(mina->mina->getContentSize()/15,PhysicsMaterial(0.0f,0.0f,1.0f));
 		minaBody->setCollisionBitmask(3);
 		minaBody->setContactTestBitmask(true);
 		minaBody->setDynamic(true);
-		mina->setPhysicsBody( minaBody );
+		mina->setPhysicsBody( minaBody );*/
 		mina->setVisible(true);
 		personaje->usarMina();//numMina++
 
@@ -510,12 +519,12 @@ void Juego::lanzarMina(int tipo){
 
 void Juego::eliminarMina(){
 	//Para que la mina desaparezca cuando explote:
-		if(personaje->getTiempoMina() >= 3 && personaje->isMina() && personaje->getNumMina() > 0){
+		if(personaje->getTiempoMina() >= 3 && personaje->getNumMina() > 0 /*Crear variable personaje->colMina, para que las colisiones se filtren aqui con un or*/){
 			personaje->setIsMina(false);
 			personaje->setTiempoMina(0);	
 			personaje->retornaMina();//Resta 1 al numero de minas lanzadas.
 			//explosionMina = mina->explotarMina();//Por ahora no hace nada, pero hara la animación
-			mina->removeFromPhysicsWorld();
+			//mina->removeFromPhysicsWorld();
 			mina->setVisible(false);//Se aproxima a lo que quiero.
 			label->setString("borrado");
 			//		
