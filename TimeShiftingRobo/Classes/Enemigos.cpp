@@ -25,16 +25,15 @@ public:
 		pasosDer = 0;
 		if(tipo== 1){
 			this->tipo = 1;
-			enemigo = Sprite::create("E_BipedoDer.png");
+			enemigo = Sprite::create("E_Bipedo.png");
 		}else{
 			this->tipo = 2;
 			enemigo = Sprite::create("la.png");
-
 		}
 		this->addChild( enemigo);
 	}
 
-	void animEnemigo(int direccion){
+	void terrestres::animEnemigo(int direccion){
 		if(direccion == 1){
 			enemigo->setFlippedX(false);
 			//enemigo->setTexture("E_BipedoDer.png");

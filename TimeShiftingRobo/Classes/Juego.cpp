@@ -3,11 +3,17 @@
 USING_NS_CC;
 
 //Cosas de colisiones buscar contactManager
+
+void Juego::setPhysicsWorld(PhysicsWorld *world){
+	world->setGravity(Vec2::ZERO);
+	//addChild(world);
+}
 Scene* Juego::createScene()
 {
 	auto scene = Scene::createWithPhysics();
     //auto scene = Scene::create();
-	/*scene->getPhysicsWorld()->setDebugDrawMask( PhysicsWorld::DEBUGDRAW_ALL );*/
+	scene->getPhysicsWorld()->setDebugDrawMask( PhysicsWorld::DEBUGDRAW_ALL );
+	scene->getPhysicsWorld()->setGravity(Vec2::ZERO);
     
     Juego* layer = Juego::create();
 	layer->setPhysicsWorld(scene->getPhysicsWorld());
@@ -256,12 +262,6 @@ void Juego::contadorLasers(float delta){
 	}
 }
 
-void Juego::setPhysicsWorld(PhysicsWorld *world) {
-	sceneWorld = world;
-	//sceneWorld->
-	sceneWorld->setGravity(Vec2(0,-98.0f));
-}
-
 bool Juego::onContactBegin(PhysicsContact &contact){
 	PhysicsBody *a = contact.getShapeA()->getBody();
 	PhysicsBody *b = contact.getShapeB()->getBody();
@@ -280,10 +280,10 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 			label->setString("Colisiona, personaje, mina");
 			eliminarMina();
 			if(personaje->getOrientacion() == 2){
-				accionSalto = JumpBy::create(4,Point(500, personaje->getPositionY()), 320, 1);//Para saltar??
+				accionSalto = JumpBy::create(3,Point(0, -20), 210, 1);//Para saltar, hay que generizarlo para cualquier colision de suelo(generalizar y)
 				personaje->runAction(accionSalto);
 			}else if(personaje->getOrientacion() == 1){
-				accionSalto = JumpBy::create(4,Point(-500, personaje->getPositionY()), 320, 1);
+				accionSalto = JumpBy::create(3,Point(-500, -20), 210, 1);
 				personaje->runAction(accionSalto);
 			}
 			
@@ -377,6 +377,7 @@ void Juego::update(float delta) {
 	Vec2 locEscenario = background->getPosition();
 	Vec2 locEnemigo = enemigo1->getPosition();
 	enemigo1->ruta();
+	enemigo2->ruta();
 	//moverEnemigos(locEnemigo);
 	centerViewport();
 	if(isKeyPressed(EventKeyboard::KeyCode::KEY_A)) {
@@ -500,7 +501,7 @@ void Juego::lanzarMina(int tipo){
 		auto minaBody = PhysicsBody::createBox(mina->mina->getContentSize()/15,PhysicsMaterial(0.0f,0.0f,1.0f));
 		minaBody->setCollisionBitmask(3);
 		minaBody->setContactTestBitmask(true);
-		minaBody->setDynamic(true);
+		minaBody->setDynamic(false);
 		mina->setPhysicsBody( minaBody );
 		mina->setVisible(true);
 		personaje->usarMina();//numMina++
