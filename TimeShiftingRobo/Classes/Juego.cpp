@@ -33,14 +33,14 @@ bool Juego::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	//Puntos de colisión del suelo:
 	auto edgeBody = PhysicsBody::createEdgeBox( Size(visibleSize.width * 2.15 ,visibleSize.height / 1.1), PhysicsMaterial(0.0f,0.0f,1.0f) );
-    
-    auto edgeNode = Node::create();
+    edgeBody->setCollisionBitmask(100);
+    edgeNode = Node::create();
     edgeNode ->setPosition( Point( 660,-280) );
     edgeNode->setPhysicsBody( edgeBody );
 	this->addChild( edgeNode );
 
 	auto edgeBody1 = PhysicsBody::createEdgeBox( Size(1150 ,visibleSize.height / 1.1), PhysicsMaterial(0.0f,0.0f,1.0f) );
-    
+ 
     auto edgeNode1 = Node::create();
     edgeNode1 ->setPosition( Point( 3070,100) );
     edgeNode1->setPhysicsBody( edgeBody1 );
@@ -73,16 +73,18 @@ bool Juego::init()
     edgeNode5 ->setPosition( Point( 7545,1350) );
     edgeNode5->setPhysicsBody( edgeBody5 );
 	this->addChild( edgeNode5 );
-
+	
+	//Colisión entrada:
 	auto edgeBody6 = PhysicsBody::createEdgeBox( Size(10, 3000), PhysicsMaterial(0.0f,0.0f,1.0f) );
     
     auto edgeNode6 = Node::create();
     edgeNode6 ->setPosition( Point( -600,0) );
     edgeNode6->setPhysicsBody( edgeBody6 );
 	this->addChild( edgeNode6 );
+	//Fin colisión entrada.
 
 	auto edgeBody8 = PhysicsBody::createEdgeBox( Size(500000, 200), PhysicsMaterial(0.0f,0.0f,1.0f) );
-    
+
     auto edgeNode8 = Node::create();
     edgeNode8 ->setPosition( Point( -600,-500) );
     edgeNode8->setPhysicsBody( edgeBody8 );
@@ -267,14 +269,6 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 	PhysicsBody *b = contact.getShapeB()->getBody();
 	//Comprobar si los body han colisionado:
 	
-	if(7 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask()|| 
-		1 == a->getCollisionBitmask() && 7 == b->getCollisionBitmask() ){
-			//jointPlataform->construct(a,b,Vec2(1,2));
-			personaje->setPlataformCollision(true);
-	}else{
-			personaje->setPlataformCollision(false);
-	}
-	
 	if(3 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask()|| 
 		1 == a->getCollisionBitmask() && 3 == b->getCollisionBitmask() ){
 			label->setString("Colisiona, personaje, mina");
@@ -300,9 +294,7 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 	
 	if(1 == a->getCollisionBitmask() && 2 == b->getCollisionBitmask() ||
 		2 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask()){
-		/*personaje->removeFromPhysicsWorld();*/
-		//personaje->removeAllChildrenWithCleanup(true);	
-		//label->setString("Colisiona, con enemigo");
+		//Quitarle vida al personaje:
 	}
 	//Tema colisión con llaves:
 	if(1 == a->getCollisionBitmask() && 10 == b->getCollisionBitmask() ||
@@ -325,6 +317,17 @@ bool Juego::onContactBegin(PhysicsContact &contact){
 		interruptor->setEsActivo(true);
 	}else{
 		interruptor->setEsActivo(false);//Pasar al update haber si se soluciona.
+	}
+
+
+
+	//COLISIÓN CON EL PRIMER SUELO:
+
+	if(100 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask()|| 
+		1 == a->getCollisionBitmask() && 100 == b->getCollisionBitmask() ){
+			personaje->grounded = true;
+			personaje->velocity = Point(0,0);
+			personaje->position.y = edgeNode->getBoundingBox().getMaxY();
 	}
 	return true;
 }
@@ -370,28 +373,18 @@ void Juego::centerViewport()	{
 }
 
 void Juego::update(float delta) {
-    // Función que comprueba si las teclas A y D estan siendo pulsadas y mueven al personaje a derecha o izquierda.
     Node::update(delta);
 
-	Vec2 loc = personaje->getPosition();
 	Vec2 locEscenario = background->getPosition();
 	Vec2 locEnemigo = enemigo1->getPosition();
-	enemigo1->ruta();
+	enemigo1->ruta();//Rutas de los enemigos.
 	enemigo2->ruta();
+	plataforma->rutaPlataforma();
 	//moverEnemigos(locEnemigo);
-	centerViewport();
-	if(isKeyPressed(EventKeyboard::KeyCode::KEY_A)) {
-		personaje->personajeAnim(1);//Para que el personaje mire a la izquierda.
-		personaje->setPosition(loc.x - 3,loc.y);
-    }else if(isKeyPressed(EventKeyboard::KeyCode::KEY_D)){
-		personaje->personajeAnim(2);
-		personaje->setPosition(loc.x + 3,loc.y);
-	}
-	//Personaje en una plataforma//Esto hay que apañarlo de alguna forma.
-	/*if(personaje->getPlataformCollision()){
-		personaje->setPosition(Vec2(personaje->getPositionX(), plataforma->getPositionY()*1.6));
-	}*/
+	centerViewport();//Actualiza el movimiento de la camara.
 
+
+	//Personaje esta delante de las puertas:
 	if(personaje->getPosition() > Vec2(puerta1->getPositionX() -100 ,puerta1->getPositionY() -100) && personaje->getPosition() < Vec2(puerta1->getPositionX() + 100 ,puerta1->getPositionY() +100)){
 		puerta1->personajeEnLaPuerta(true);
 	}else{
@@ -402,6 +395,10 @@ void Juego::update(float delta) {
 	}else{
 		puerta2->personajeEnLaPuerta(false);
 	}
+	//Fin personaje esta delante de las puertas.
+
+
+
 
 	//Mina va con el personaje:
 	if(!personaje->isMina()){
@@ -411,7 +408,10 @@ void Juego::update(float delta) {
 			mina->setPosition(Vec2(personaje->getPositionX() - 130, personaje->getPositionY()));
 		}
 	}
-	//Abrir la puerta si:
+
+
+
+	//Abrir la puerta del jefe:
 	/*if(llave1->esRecigida() && !llave2->esRecigida() ){
 
 	}else if(llave2->esRecigida() && !llave1->esRecigida()){
@@ -420,12 +420,86 @@ void Juego::update(float delta) {
 		//label->setString("Puerta abierta");//Esto funciona, pero a la hora del debug lo quito.
 	}
 
-	plataforma->rutaPlataforma();
+	this->updatePersonaje(delta);
 
+}
+
+void Juego::updatePersonaje(float delta){
+	//Controles de tecla mantenida pulsada:
+	if(mina->isVisible()){//Por ahora isVisivle...Cambiar
+		if(personaje->grounded){
+			personaje->groundedPosition = personaje->getPositionY();
+			personaje->velocity.y = PLAYER_JUMP_VELOCITY;
+			personaje->state = Personaje::State::Saltando;
+			personaje->grounded = false;
+		}else{
+			if(personaje->groundedPosition < personaje->getPositionY() + personaje->velocity.y){
+				personaje->velocity -= Point(0, 0.5f);//Le resta a las y la fuerza de la gravedad
+			}
+		}
+	}
+
+		//personaje->velocity -= Point(0, 0.3f);//Le resta a las y la fuerza de la gravedad
+	if(isKeyPressed(EventKeyboard::KeyCode::KEY_A)) {
+		personaje->personajeAnim(1);//Para que el personaje mire a la izquierda, es su orientación, 1 izquierda
+		personaje->velocity.x = -PLAYER_MAX_VELOCITY;
+		if(personaje->grounded){
+			personaje->state = Personaje::State::Corriendo;
+		}
+
+    }else if(isKeyPressed(EventKeyboard::KeyCode::KEY_D)){
+		personaje->personajeAnim(2);// es su orientación, 2 derecha.
+		personaje->velocity.x = PLAYER_MAX_VELOCITY;
+			if(personaje->grounded){
+				personaje->state = Personaje::State::Corriendo;
+			}
+
+	}
+
+		if (std::abs(personaje->velocity.x) > PLAYER_MAX_VELOCITY) {
+			personaje->velocity.x = signum(personaje->velocity.x) * PLAYER_MAX_VELOCITY;
+		}
+	
+		if (std::abs(personaje->velocity.x) < 1) {
+			personaje->velocity.x = 0;
+			if (personaje->grounded) {
+				personaje->state = Personaje::State::Quieto;
+			}
+		}
+ 
+		// unscale the velocity by the inverse delta time and set
+		// the latest position
+		personaje->velocity = personaje->velocity * delta;
+		personaje->position.x = personaje->position.x + personaje->velocity.x;
+		personaje->position.y = personaje->position.y + personaje->velocity.y;
+		personaje->velocity = personaje->velocity * 1/delta;
+ 
+		personaje->velocity.x *= DAMPING;
+		
+		//personaje->setPositionX(personaje->getPositionX() + personaje->velocity.x);
+		personaje->setPositionX( personaje->getPositionX() + personaje->velocity.x );
+		personaje->setPositionY( personaje->getPositionY() + personaje->velocity.y );
+
+
+
+
+
+	//Fin de controles de tecla mantenida pulsada.
 }
 // Cocos requiere que createScene sea estatico, Esto es para crear otro miembro statico.
 std::map<cocos2d::EventKeyboard::KeyCode,
         std::chrono::high_resolution_clock::time_point> Juego::keys;
+
+//Función magica que ya para más adelante mirare que hace, se usa para calcular la posicion del personaje cuando este esta en movimiento.
+int Juego::signum(float x) 
+{ 
+  if (x > 0.0L) 
+    return 1.0L; 
+  else if (x < 0.0L)   
+    return -1.0L; 
+  else   
+    return 0.0L; 
+}
 
 //Función que controla las teclas de un solo pulsado:
 void Juego::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
@@ -441,7 +515,7 @@ void Juego::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 		personaje->setOrientacion(1);
 		break;*/
 	case EventKeyboard::KeyCode::KEY_R:
-		personaje->setPosition( Point( 100, 200) );
+		//na de na.
 		/*personaje->setPosition(Vec2(personaje->getPositionX(), personaje->getPositionY() + 100));*/
 		break;
 	case EventKeyboard::KeyCode::KEY_C:
@@ -498,10 +572,10 @@ void Juego::lanzarMina(int tipo){
 				mina->setPosition(personaje->getPosition());
 			}
 		}
-		auto minaBody = PhysicsBody::createBox(mina->mina->getContentSize()/15,PhysicsMaterial(0.0f,0.0f,1.0f));
+		auto minaBody = PhysicsBody::createBox(mina->mina->getContentSize()/6,PhysicsMaterial(0.0f,0.0f,1.0f));
 		minaBody->setCollisionBitmask(3);
 		minaBody->setContactTestBitmask(true);
-		minaBody->setDynamic(false);
+		minaBody->setDynamic(true);
 		mina->setPhysicsBody( minaBody );
 		mina->setVisible(true);
 		personaje->usarMina();//numMina++
@@ -517,7 +591,7 @@ void Juego::eliminarMina(){
 			personaje->retornaMina();//Resta 1 al numero de minas lanzadas.
 			//explosionMina = mina->explotarMina();//Por ahora no hace nada, pero hara la animación
 			mina->removeFromPhysicsWorld();
-			mina->setVisible(false);//Se aproxima a lo que quiero.
+			mina->setVisible(false);
 			label->setString("borrado");
 			//		
 		}

@@ -7,6 +7,7 @@
 #include "Mina.h"
 #include "Enemigos.cpp"
 #include "ObjetosInmoviles.cpp"
+#include "Globales.h"
 
 #define COCOS2D_DEBUG 1;//COSAS PARA DEBUG DE COCOS...
 
@@ -34,6 +35,7 @@ public:
 	cocos2d::Sprite *enemigo2Sprite;
 	JumpBy* accionSalto;
 	JumpBy* lanzamientoDeMina;
+	int signum(float x);
 	
 	//Prueba debug info
 	cocos2d::Label *label;
@@ -58,6 +60,7 @@ private:
 	 void contador(float);
 	 void saltar(float);
 	 void contadorLasers(float);//Cuando vuelva hay que hacer el contador para todos los lasers.
+	 void updatePersonaje(float);
 	 llaves* llave1;
 	 llaves* llave2;
 	 Plataforma* plataforma;
@@ -65,6 +68,8 @@ private:
 	 Puerta* puerta1;
 	 Puerta* puerta2;
 	 laser* laser1;
+	 Node* edgeNode;
+
 
 	 void centerViewport(void);
 	 
