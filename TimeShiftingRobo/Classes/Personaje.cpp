@@ -5,9 +5,18 @@ int numMina;
 int duracionMina;
 Personaje::Personaje(void)
 {
+
+	state = Personaje::State::Quieto;
+	facingRight = true;
+	grounded = true;
+	groundedPosition = this->getPositionY();
+	stateTime = 0;
+	velocity = Point(0,0);
+	position = Point();
+
+	vida = 3;
 	numMina = 0;
 	duracionMina = 0;
-	isPlataformCollision = false;
 	minaApear = false;
 	orientacion = 2;
 	personajeSprite = Sprite::create("Robo.png");
@@ -32,14 +41,6 @@ int Personaje::getOrientacion(){
 
 void Personaje::setOrientacion(int orientacion){
 	this->orientacion = orientacion;
-}
-
-bool Personaje::getPlataformCollision(){
-	return isPlataformCollision;
-}
-
-void Personaje::setPlataformCollision(bool hayColision){
-	isPlataformCollision = hayColision;
 }
 
 bool Personaje::isMina(){

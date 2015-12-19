@@ -3,7 +3,7 @@
 Mina::Mina(void)
 {
 	mina = Sprite::create("Mina.png");
-	this->addChild( mina, 1 );
+	this->addChild( mina );
 
 }
 
