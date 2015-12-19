@@ -435,6 +435,10 @@ void Juego::updatePersonaje(float delta){
 		}else{
 			if(personaje->groundedPosition < personaje->getPositionY() + personaje->velocity.y){
 				personaje->velocity -= Point(0, 0.5f);//Le resta a las y la fuerza de la gravedad
+			}else{
+				personaje->velocity.y = 0;
+				personaje->grounded = 0;
+				//personaje->grounded = true;
 			}
 		}
 	}
